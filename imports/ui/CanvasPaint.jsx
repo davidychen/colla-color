@@ -21,10 +21,8 @@ class CanvasPaint extends Component {
   drawBoard() {
     const ctx = this.canvas2.getContext("2d");
 
-    console.log("all colors", this.props.color.allColor);
     for (const p of this.props.color.allColor) {
       ctx.fillStyle = p.color;
-      console.log("all colors", p);
       ctx.fillRect(p.x * 20,  p.y * 20, 20, 20);
     }
   }

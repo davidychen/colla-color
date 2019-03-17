@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.1.5",
+    "bcrypt": "^3.0.4",
     "meteor-node-stubs": "^0.4.1",
+    "prop-types": "^15.7.2",
     "react": "^16.5.0",
-    "react-dom": "^16.5.0"
+    "react-dom": "^16.5.0",
+    "react-router-dom": "^4.4.0"
   },
   "meteor": {
     "mainModule": {
@@ -23,6 +26,8 @@
   "devDependencies": {
     "eslint": "^5.15.2",
     "eslint-plugin-react": "^7.12.4",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "prop-types": "^15.7.2",
+    "react-router-dom": "^4.4.0"
   }
 }
