@@ -1,13 +1,38 @@
-import React from 'react';
-import Hello from './Hello.jsx';
-import Info from './Info.jsx';
+import React, { Component } from "react";
+import { Meteor } from "meteor/meteor";
+import { withTracker } from "meteor/react-meteor-data";
 
-const App = () => (
-  <div>
-    <h1>Welcome to Meteor!</h1>
-    <Hello />
-    <Info />
-  </div>
-);
+//import Points from "../api/points.js";
+import Area from "../api/area.js";
+import ColorBoard from "../api/colorBoard.js";
 
-export default App;
+
+import CanvasPaint from "./CanvasPaint.jsx";
+import AccountsUIWrapper from "./AccountsUIWrapper.jsx";
+
+class App extends Component {
+  render() {
+    return (
+      <div>
+        <div>Collaborative Painting</div>
+
+        <AccountsUIWrapper/>
+
+        { Meteor.user() ?
+          <CanvasPaint/> :
+          <div>Please login to play!</div>
+        }
+
+      </div>
+    );
+  }
+}
+
+
+export default withTracker(() => {
+  return ({
+    user:Meteor.user()
+  });
+})(App);
+
+
