@@ -6,11 +6,21 @@ import PropTypes from "prop-types";
 import { Area } from "../api/area.js";
 import { ColorBoard } from "../api/colorBoard.js";
 
+var pictureLength = 0;
 class CanvasPaint extends Component {
-  redraw() {
-    const ctx = this.canvas.getContext("2d");
+  constructor(props) {
+    super(props);
 
-    for (const p of this.props.area) {
+    this.state = {
+      index: 0
+    };
+  }
+
+  redraw() {
+
+    const ctx = this.canvas.getContext("2d");
+    ctx.clearRect(0, 0, 500, 500);
+    for (const p of this.props.area[this.state.index].area) {
       ctx.fillStyle = p.color;
       for (const cood of p.coordinate){
         ctx.fillRect(cood.x * 10, cood.y * 10, 10, 10);
@@ -19,8 +29,20 @@ class CanvasPaint extends Component {
   }
 
   drawBoard() {
+    var pictureLength = Area.find({}).fetch().length;
+
+    var select = document.getElementById("selectNumber"); 
+
+    for(var i = 0; i < pictureLength; i++) {
+      var opt = i+1;
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+
+
     const ctx = this.canvas2.getContext("2d");
-    console.log(this.props.color);
     
     for (const p of this.props.color.allColor) {
       ctx.fillStyle = p.color;
@@ -46,9 +68,9 @@ class CanvasPaint extends Component {
 
     const insertX = Math.floor(x/10);
     const insertY = Math.floor(y/10);
-    //console.log("click", insertX, insertY);
     var flag = false; //area.click
-    for (const p of this.props.area) {
+    for (var i = 0; i < this.props.area[this.state.index].area.length; i++) {
+      var p = this.props.area[this.state.index].area[i];
       for (const cood of p.coordinate){
         if (insertX == cood.x && insertY == cood.y){
           flag = true;
@@ -56,7 +78,7 @@ class CanvasPaint extends Component {
         }
       }
       if (flag) {
-        Meteor.call("area.update", p, this.props.color.color);
+        Meteor.call("area.update", this.props.area[this.state.index], i, this.props.color.color);
         break;
       }
     }
@@ -68,6 +90,13 @@ class CanvasPaint extends Component {
         break;
       }
     }
+  }
+
+  onSelectChange(evt) {
+    this.setState({
+      index: evt.target.value - 1
+    });
+    this.redraw();
   }
 
   render() {
@@ -89,6 +118,10 @@ class CanvasPaint extends Component {
           ref={canvas => (this.canvas2 = canvas)}
           onClick = {this.onClick.bind(this)}
         />
+
+        <select id="selectNumber"
+          onChange={this.onSelectChange.bind(this)}>
+        </select>
         
       </div>
       
@@ -112,10 +145,12 @@ export default withTracker(() => {
   if (Area.find({}).fetch()[0] == undefined) {
     Meteor.call("area.insert");
   }
+
   return {
     color: ColorBoard.find({}).fetch()[0],
     area: Area.find({}).fetch(),
     ready : handle.ready(),
-    ready2 : handle2.ready()
+    ready2 : handle2.ready(),
+    index: 0
   };
 })(CanvasPaint);
