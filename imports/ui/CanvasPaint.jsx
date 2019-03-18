@@ -46,7 +46,7 @@ class CanvasPaint extends Component {
 
     const insertX = Math.floor(x/10);
     const insertY = Math.floor(y/10);
-
+    //console.log("click", insertX, insertY);
     var flag = false; //area.click
     for (const p of this.props.area) {
       for (const cood of p.coordinate){

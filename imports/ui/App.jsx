@@ -10,6 +10,7 @@ import NavBar from "./NavBar.jsx";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import CanvasPaint from "./CanvasPaint.jsx";
+import Gallery from "./Gallery.jsx";
 import AccountsUIWrapper from "./AccountsUIWrapper.jsx";
 
 const HomeComponent = () => {
@@ -29,12 +30,19 @@ const HomeComponent = () => {
 const AboutComponent = () =>
   <div>
     <h2>About</h2>
-    <div>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Est saepe, ea minus quae ab nam impedit eaque. Adipisci expedita sit repudiandae, enim sapiente ipsam voluptas obcaecati veritatis, sunt eius nemo.</div>
+    <div>This is a cooperative filling color game.</div>
+  </div>;
+
+
+const GalleryComponent = () =>
+  <div>
+    <h2>Gallery</h2>
+    <Gallery/>
   </div>;
 
 const NotFoundPage = () =>
   <div>
-    <h2>Page not found</h2>
+    <h2>404 Page not found</h2>
   </div>;
 
 class App extends Component {
@@ -45,6 +53,7 @@ class App extends Component {
           <NavBar />
           <Switch>
             <Route exact path="/" component={HomeComponent} />
+            <Route exact path="/gallery" component={GalleryComponent} />
             <Route exact path="/about" component={AboutComponent} />
             <Route component={NotFoundPage} />
           </Switch>
