@@ -1,7 +1,11 @@
 import React from "react";
 import classnames from "classnames";
+import { withHistory, Link } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { Accounts } from "meteor/accounts-base";
 // reactstrap components
 import {
+  Alert,
   Button,
   Card,
   CardHeader,
@@ -18,18 +22,28 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
+  UncontrolledAlert
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.jsx";
-import Footer from "components/Footer/Footer.jsx";
+import Navbar from "../../components/Navbars/Navbar.jsx";
+import Footer from "../../components/Footer/Footer.jsx";
 
 class RegisterPage extends React.Component {
-  state = {
-    squares1to6: "",
-    squares7and8: ""
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      squares1to6: "",
+      squares7and8: "",
+      error: "",
+      errorVisible: false
+    };
+    this.followCursor = this.followCursor.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
+  }
+
   componentDidMount() {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
@@ -41,7 +55,7 @@ class RegisterPage extends React.Component {
       this.followCursor
     );
   }
-  followCursor = event => {
+  followCursor(event) {
     let posX = event.clientX - window.innerWidth / 2;
     let posY = event.clientY - window.innerWidth / 6;
     this.setState({
@@ -58,11 +72,33 @@ class RegisterPage extends React.Component {
         posY * -0.02 +
         "deg)"
     });
-  };
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let name = document.getElementById("signup-name").value;
+    let password = document.getElementById("signup-password").value;
+    Accounts.createUser({ username: name, password: password }, err => {
+      if (err) {
+        this.setState({
+          error: err.reason,
+          errorVisible: true
+        });
+      } else {
+        this.props.history.push("/login");
+      }
+    });
+  }
+
+  onDismiss() {
+    this.setState({ errorVisible: false });
+  }
+
   render() {
+    const error = this.state.error;
     return (
-      <>
-        <ExamplesNavbar />
+      <div>
+        <Navbar />
         <div className="wrapper">
           <div className="page-header">
             <div className="page-header-image" />
@@ -84,11 +120,22 @@ class RegisterPage extends React.Component {
                       <CardHeader>
                         <CardImg
                           alt="..."
-                          src={require("assets/img/square-purple-1.png")}
+                          src="assets/img/square-purple-1.png"
                         />
                         <CardTitle tag="h4">Register</CardTitle>
                       </CardHeader>
                       <CardBody>
+                        <Alert
+                          color="danger"
+                          isOpen={this.state.errorVisible}
+                          toggle={this.onDismiss}
+                        >
+                          <span>
+                            <b>Error! -</b>
+                            {error}
+                          </span>
+                        </Alert>
+
                         <Form className="form">
                           <InputGroup
                             className={classnames({
@@ -97,12 +144,13 @@ class RegisterPage extends React.Component {
                           >
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
-                                <i className="tim-icons icon-single-02" />
+                                <i className="fas fa-user" />
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
-                              placeholder="Full Name"
+                              placeholder="User Name"
                               type="text"
+                              id="signup-name"
                               onFocus={e =>
                                 this.setState({ fullNameFocus: true })
                               }
@@ -113,34 +161,18 @@ class RegisterPage extends React.Component {
                           </InputGroup>
                           <InputGroup
                             className={classnames({
-                              "input-group-focus": this.state.emailFocus
-                            })}
-                          >
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <i className="tim-icons icon-email-85" />
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input
-                              placeholder="Email"
-                              type="text"
-                              onFocus={e => this.setState({ emailFocus: true })}
-                              onBlur={e => this.setState({ emailFocus: false })}
-                            />
-                          </InputGroup>
-                          <InputGroup
-                            className={classnames({
                               "input-group-focus": this.state.passwordFocus
                             })}
                           >
                             <InputGroupAddon addonType="prepend">
                               <InputGroupText>
-                                <i className="tim-icons icon-lock-circle" />
+                                <i className="fas fa-lock" />
                               </InputGroupText>
                             </InputGroupAddon>
                             <Input
                               placeholder="Password"
-                              type="text"
+                              id="signup-password"
+                              type="password"
                               onFocus={e =>
                                 this.setState({ passwordFocus: true })
                               }
@@ -149,25 +181,23 @@ class RegisterPage extends React.Component {
                               }
                             />
                           </InputGroup>
-                          <FormGroup check className="text-left">
-                            <Label check>
-                              <Input type="checkbox" />
-                              <span className="form-check-sign" />I agree to the{" "}
-                              <a
-                                href="#pablo"
-                                onClick={e => e.preventDefault()}
-                              >
-                                terms and conditions
-                              </a>
-                              .
-                            </Label>
-                          </FormGroup>
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="primary" size="lg">
-                          Get Started
+                        <Button
+                          className="btn-round"
+                          color="primary"
+                          size="lg"
+                          onClick={this.handleSubmit}
+                        >
+                          Sign Up
                         </Button>
+                        <div className="form-group">
+                          <p className="text-center">
+                            Already have an account? Login{" "}
+                            <Link to="/login">here</Link>
+                          </p>
+                        </div>
                       </CardFooter>
                     </Card>
                   </Col>
@@ -208,7 +238,7 @@ class RegisterPage extends React.Component {
           </div>
           <Footer />
         </div>
-      </>
+      </div>
     );
   }
 }

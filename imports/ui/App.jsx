@@ -15,6 +15,7 @@ import CanvasPaint from "./CanvasPaint.jsx";
 import Gallery from "./Gallery.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
+import RegisterPage from "./views/pages/RegisterPage.jsx";
 import AccountsUIWrapper from "./AccountsUIWrapper.jsx";
 
 const HomeComponent = () => {
@@ -62,8 +63,12 @@ class App extends Component {
               render={props => <LandingPage {...props} />}
             />
             <Route
-              path="/login-page"
+              path="/login"
               render={props => <LoginPage {...props} />}
+            />
+            <Route
+              path="/signup"
+              render={props => <RegisterPage {...props} />}
             />
             <Route component={NotFoundPage} />
           </Switch>

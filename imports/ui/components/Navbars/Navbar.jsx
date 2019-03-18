@@ -2,7 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
 import {
+  Button,
   Collapse,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  UncontrolledDropdown,
   NavbarBrand,
   Navbar,
   NavItem,
@@ -13,13 +18,19 @@ import {
   Col
 } from "reactstrap";
 
-class PagesNavbar extends React.Component {
+class MainNavbar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       collapseOpen: false,
       color: "navbar-transparent"
     };
+    this.changeColor = this.changeColor.bind(this);
+    this.toggleCollapse = this.toggleCollapse.bind(this);
+    this.onCollapseExiting = this.onCollapseExiting.bind(this);
+    this.onCollapseExited = this.onCollapseExited.bind(this);
+    this.scrollToDownload = this.scrollToDownload.bind(this);
+    this.logout = this.logout.bind(this);
   }
   componentDidMount() {
     window.addEventListener("scroll", this.changeColor);
@@ -27,7 +38,7 @@ class PagesNavbar extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("scroll", this.changeColor);
   }
-  changeColor = () => {
+  changeColor() {
     if (
       document.documentElement.scrollTop > 99 ||
       document.body.scrollTop > 99
@@ -43,23 +54,32 @@ class PagesNavbar extends React.Component {
         color: "navbar-transparent"
       });
     }
-  };
-  toggleCollapse = () => {
+  }
+  toggleCollapse() {
     document.documentElement.classList.toggle("nav-open");
     this.setState({
       collapseOpen: !this.state.collapseOpen
     });
-  };
-  onCollapseExiting = () => {
+  }
+  onCollapseExiting() {
     this.setState({
       collapseOut: "collapsing-out"
     });
-  };
-  onCollapseExited = () => {
+  }
+  onCollapseExited() {
     this.setState({
       collapseOut: ""
     });
-  };
+  }
+  scrollToDownload() {
+    document
+      .getElementById("download-section")
+      .scrollIntoView({ behavior: "smooth" });
+  }
+
+  logout(){
+
+  }
   render() {
     return (
       <Navbar
@@ -73,11 +93,11 @@ class PagesNavbar extends React.Component {
               data-placement="bottom"
               to="/"
               rel="noopener noreferrer"
-              title="Designed and Coded by Creative Tim"
+              title="Designed and Coded by David and Sim"
               tag={Link}
             >
-              <span>BLK• </span>
-              Design System React
+              <span>CC• </span>
+              Colla Color
             </NavbarBrand>
             <button
               aria-expanded={this.state.collapseOpen}
@@ -100,7 +120,7 @@ class PagesNavbar extends React.Component {
               <Row>
                 <Col className="collapse-brand" xs="6">
                   <a href="#pablo" onClick={e => e.preventDefault()}>
-                    BLK•React
+                    CC•Colla Color
                   </a>
                 </Col>
                 <Col className="collapse-close text-right" xs="6">
@@ -109,57 +129,76 @@ class PagesNavbar extends React.Component {
                     className="navbar-toggler"
                     onClick={this.toggleCollapse}
                   >
-                    <i className="fas fa-times" />
+                    <i className="tim-icons icon-simple-remove" />
                   </button>
                 </Col>
               </Row>
             </div>
             <Nav navbar>
-              <NavItem className="p-0">
+              {this.props.loggedIn && <NavItem className="p-0">
                 <NavLink
                   data-placement="bottom"
-                  href="https://twitter.com/CreativeTim"
+                  tag={Link}
+                  to="/gallery"
                   rel="noopener noreferrer"
                   target="_blank"
-                  title="Follow us on Twitter"
+                  title="View all Pieces"
                 >
-                  <i className="fab fa-twitter" />
-                  <p className="d-lg-none d-xl-none">Twitter</p>
+                  <i className="fas fa-images" />
+                  <p className="d-lg-none d-xl-none">Gallery</p>
                 </NavLink>
-              </NavItem>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="https://www.facebook.com/CreativeTim"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Like us on Facebook"
+              </NavItem>}
+              {this.props.loggedIn && <UncontrolledDropdown nav>
+                <DropdownToggle
+                  caret
+                  color="default"
+                  data-toggle="dropdown"
+                  href="#pablo"
+                  nav
+                  onClick={e => e.preventDefault()}
                 >
-                  <i className="fab fa-facebook-square" />
-                  <p className="d-lg-none d-xl-none">Facebook</p>
-                </NavLink>
-              </NavItem>
-              <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  href="https://www.instagram.com/CreativeTimOfficial"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="Follow us on Instagram"
+                  <i className="fa fa-cogs d-lg-none d-xl-none" />
+                  {this.props.currentUser.username}
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-with-icons">
+                  <DropdownItem onClick={this.logout}>
+                    <i className="fas fa-user" />
+                    Logout
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>}
+              {!this.props.loggedIn && <UncontrolledDropdown nav>
+                <DropdownToggle
+                  caret
+                  color="default"
+                  data-toggle="dropdown"
+                  href="#pablo"
+                  nav
+                  onClick={e => e.preventDefault()}
                 >
-                  <i className="fab fa-instagram" />
-                  <p className="d-lg-none d-xl-none">Instagram</p>
-                </NavLink>
-              </NavItem>
+                  <i className="fa fa-cogs d-lg-none d-xl-none" />
+                  Getting started
+                </DropdownToggle>
+                <DropdownMenu className="dropdown-with-icons">
+                  <DropdownItem tag={Link} to="/login">
+                    <i className="fas fa-user" />
+                    Login
+                  </DropdownItem>
+                  <DropdownItem tag={Link} to="/signup">
+                    <i className="fas fa-user-plus" />
+                    Sign Up
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>}
+              
               <NavItem>
-                <NavLink tag={Link} to="/">
-                  Back to Kit
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/creativetimofficial/blk-design-system-react/issues">
-                  Have an issue?
-                </NavLink>
+                <Button
+                  className="nav-link d-none d-lg-block"
+                  color="default"
+                  onClick={this.scrollToDownload}
+                >
+                  <i className="tim-icons icon-cloud-download-93" /> Download
+                </Button>
               </NavItem>
             </Nav>
           </Collapse>
@@ -169,4 +208,4 @@ class PagesNavbar extends React.Component {
   }
 }
 
-export default PagesNavbar;
+export default MainNavbar;

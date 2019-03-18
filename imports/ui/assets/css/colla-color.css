@@ -414,7 +414,7 @@ mark,
   font-size: 80%;
   color: #6c757d; }
   .blockquote-footer::before {
-    content: "\2014 \00A0"; }
+    /*content: "\2014 \00A0"; */}
 
 .img-fluid {
   max-width: 100%;
@@ -8878,8 +8878,8 @@ fieldset[disabled]
 
 .has-success:after,
 .has-danger:after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  /*font-family: 'nucleo';*/
+  /*content: "\ea1b";*/
   display: inline-block;
   position: absolute;
   right: 20px;
@@ -8905,7 +8905,7 @@ fieldset[disabled]
   color: #00f2c3; }
 
 .has-danger:after {
-  content: "\ea48";
+  /*content: "\ea48";*/
   color: #ec250d; }
 
 .has-danger.form-check .form-check-label {
@@ -10551,12 +10551,12 @@ hr {
   background-color: #e14eca; }
 
 .form-check .form-check-sign::after {
-  font-family: 'nucleo';
-  content: "\ea1b";
+  /*font-family: 'nucleo';*/
+  /*content: "\ea1b";*/
   top: 0px;
   text-align: center;
   font-size: 14px;
-  opacity: 0;
+  /*opacity: 0;*/
   color: #ffffff;
   font-weight: 600;
   border: 0;
@@ -14941,9 +14941,9 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
     display: flex;
     justify-content: center;
     align-items: center;
-    font: normal normal normal 1em/1 "Nucleo";
+    font: normal normal normal 1em/1 /*"Nucleo"*/;
     font-size: 18px;
-    content: "\EA5E"; }
+    /*content: "\EA5E"; */}
 
 .rdtPicker table {
   width: 100%;
@@ -15043,7 +15043,7 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
     text-align: center;
     position: relative;
     display: inline-block;
-    font: normal normal normal 1em/1 "Nucleo";
+    font: normal normal normal 1em/1 /*"Nucleo"*/;
     vertical-align: middle;
     speak: none;
     text-transform: none;
@@ -15060,10 +15060,10 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
   color: #1d8cf8; }
 
 .rdtPicker th.rdtNext:before {
-  content: "\ea35"; }
+  /*content: "\ea35"; */}
 
 .rdtPicker th.rdtPrev:before {
-  content: "\ea34"; }
+  /*content: "\ea34";*/ }
 
 .rdtPrev span,
 .rdtNext span {
@@ -15219,15 +15219,15 @@ td.rdtYear:hover {
   outline: 0; }
   .alert button.close::after {
     display: inline-block;
-    font: normal normal normal 1em/1 "Nucleo";
+    /*font: normal normal normal 1em/1 "Nucleo";*/
     vertical-align: middle;
     speak: none;
     text-transform: none;
     -webkit-font-smoothing: antialiased;
-    font-size: 1rem;
-    content: "\ea48"; }
+    /*font-size: 1rem;*/
+    /*content: "\ea48";*/ }
   .alert button.close span {
-    display: none !important; }
+    /*display: none !important; */}
 
 .alert.alert-dismissible {
   padding-right: 1.25rem; }
@@ -15244,7 +15244,7 @@ td.rdtYear:hover {
 .carousel .carousel-control-prev .carousel-control-prev-icon,
 .carousel .carousel-control-next .carousel-control-next-icon {
   display: inline-block;
-  font: normal normal normal 1em/1 'Nucleo';
+  font: normal normal normal 1em/1 /*'Nucleo'*/;
   vertical-align: middle;
   speak: none;
   text-transform: none;
@@ -15252,10 +15252,10 @@ td.rdtYear:hover {
   background-image: none; }
 
 .carousel .carousel-control-prev .carousel-control-prev-icon:before {
-  content: "\ea34"; }
+  /*content: "\ea34";*/ }
 
 .carousel .carousel-control-next .carousel-control-next-icon:before {
-  content: "\ea35"; }
+  /*content: "\ea35"; */}
 
 .carousel .carousel-caption h3 {
   display: none; }

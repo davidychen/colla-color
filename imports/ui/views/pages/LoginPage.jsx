@@ -4,6 +4,7 @@ import { withHistory, Link } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 // reactstrap components
 import {
+  Alert,
   Button,
   Card,
   CardHeader,
@@ -20,7 +21,8 @@ import {
   InputGroup,
   Container,
   Row,
-  Col
+  Col,
+  UncontrolledAlert
 } from "reactstrap";
 
 // core components
@@ -28,16 +30,17 @@ import Navbar from "../../components/Navbars/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 
 class LoginPage extends React.Component {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       squares1to6: "",
       squares7and8: "",
-      error: ""
+      error: "",
+      errorVisible: false
     };
     this.followCursor = this.followCursor.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onDismiss = this.onDismiss.bind(this);
   }
 
   componentDidMount() {
@@ -51,7 +54,7 @@ class LoginPage extends React.Component {
       this.followCursor
     );
   }
-  followCursor (event) {
+  followCursor(event) {
     let posX = event.clientX - window.innerWidth / 2;
     let posY = event.clientY - window.innerWidth / 6;
     this.setState({
@@ -70,14 +73,15 @@ class LoginPage extends React.Component {
     });
   }
 
-  handleSubmit(e){
+  handleSubmit(e) {
     e.preventDefault();
     let email = document.getElementById("login-name").value;
     let password = document.getElementById("login-password").value;
-    Meteor.loginWithPassword(email, password, (err) => {
-      if(err){
+    Meteor.loginWithPassword(email, password, err => {
+      if (err) {
         this.setState({
-          error: err.reason
+          error: err.reason,
+          errorVisible: true
         });
         console.log(err.reason);
       } else {
@@ -86,8 +90,12 @@ class LoginPage extends React.Component {
     });
   }
 
+  onDismiss() {
+    this.setState({ errorVisible: false });
+  }
 
   render() {
+    const error = this.state.error;
     return (
       <div>
         <Navbar />
@@ -117,6 +125,17 @@ class LoginPage extends React.Component {
                         <CardTitle tag="h4">Login</CardTitle>
                       </CardHeader>
                       <CardBody>
+                        <Alert
+                          color="danger"
+                          isOpen={this.state.errorVisible}
+                          toggle={this.onDismiss}
+                        >
+                          <span>
+                            <b>Error! -</b>
+                            {error}
+                          </span>
+                        </Alert>
+
                         <Form className="form">
                           <InputGroup
                             className={classnames({
@@ -165,9 +184,20 @@ class LoginPage extends React.Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="primary" size="lg" onClick={this.handleSubmit}>
-                          Get Started
+                        <Button
+                          className="btn-round"
+                          color="primary"
+                          size="lg"
+                          onClick={this.handleSubmit}
+                        >
+                          Login
                         </Button>
+                        <div className="form-group text-center">
+                          <p className="text-center">
+                            Don't have an account? Register{" "}
+                            <Link to="/signup">here</Link>
+                          </p>
+                        </div>
                       </CardFooter>
                     </Card>
                   </Col>
