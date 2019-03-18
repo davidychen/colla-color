@@ -3,14 +3,23 @@ import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
 
-import { ColorBoard } from "../api/colorBoard.js";
 import { Area } from "../api/area.js";
 
-class CanvasPaint extends Component {
-  redraw() {
-    const ctx = this.canvas.getContext("2d");
+var pictureLength = 0;
+class Gallery extends Component {
+  constructor(props) {
+    super(props);
 
-    for (const p of this.props.area) {
+    this.state = {
+      index: 0
+    };
+  }
+
+  redraw() {
+
+    const ctx = this.canvas.getContext("2d");
+    ctx.clearRect(0, 0, 500, 500);
+    for (const p of this.props.area[this.state.index].area) {
       ctx.fillStyle = p.color;
       for (const cood of p.coordinate){
         ctx.fillRect(cood.x * 10, cood.y * 10, 10, 10);
@@ -18,8 +27,23 @@ class CanvasPaint extends Component {
     }
   }
 
+  drawBoard() {
+    var pictureLength = Area.find({}).fetch().length;
+    console.log(pictureLength);
+
+    var select = document.getElementById("selectNumber"); 
+
+    for(var i = 0; i < pictureLength; i++) {
+      var opt = i+1;
+      var el = document.createElement("option");
+      el.textContent = opt;
+      el.value = opt;
+      select.appendChild(el);
+    }
+  }
+
   componentDidMount() {
-    this.redraw();
+    this.drawBoard();
   }
 
   componentDidUpdate() {
@@ -30,12 +54,14 @@ class CanvasPaint extends Component {
     // Get the coords
     // const x = evt.clientX - this.canvas.offsetLeft,
     //   y =  evt.clientY - this.canvas.offsetTop;
+    // const boardX = Math.floor((evt.clientX - this.canvas2.offsetLeft)/20),
+    //   boardY =  Math.floor((evt.clientY - this.canvas2.offsetTop)/20);
 
     // const insertX = Math.floor(x/10);
     // const insertY = Math.floor(y/10);
-
     // var flag = false; //area.click
-    // for (const p of this.props.area) {
+    // for (var i = 0; i < this.props.area[this.state.index].area.length; i++) {
+    //   var p = this.props.area[this.state.index].area[i];
     //   for (const cood of p.coordinate){
     //     if (insertX == cood.x && insertY == cood.y){
     //       flag = true;
@@ -43,7 +69,7 @@ class CanvasPaint extends Component {
     //     }
     //   }
     //   if (flag) {
-    //     Meteor.call("area.update", p, this.props.color.color);
+    //     Meteor.call("area.update", this.props.area[this.state.index], i, this.props.color.color);
     //     break;
     //   }
     // }
@@ -57,6 +83,13 @@ class CanvasPaint extends Component {
     // }
   }
 
+  onSelectChange(evt) {
+    this.setState({
+      index: evt.target.value - 1
+    });
+    this.redraw();
+  }
+
   render() {
     return (
       <div>
@@ -67,13 +100,19 @@ class CanvasPaint extends Component {
           ref={canvas => (this.canvas = canvas)}
           onClick = {this.onClick.bind(this)}
         />
+
+
+        <select id="selectNumber"
+          onChange={this.onSelectChange.bind(this)}>
+        </select>
+        
       </div>
       
     );
   }
 }
 
-CanvasPaint.propTypes = {
+Gallery.propTypes = {
   area : PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
@@ -89,10 +128,10 @@ export default withTracker(() => {
   // if (Area.find({}).fetch()[0] == undefined) {
   //   Meteor.call("area.insert");
   // }
+
   return {
-    color: ColorBoard.find({}).fetch()[0],
     area: Area.find({}).fetch(),
     ready : handle.ready(),
     ready2 : handle2.ready()
   };
-})(CanvasPaint);
+})(Gallery);

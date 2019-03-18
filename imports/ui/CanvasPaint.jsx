@@ -30,6 +30,7 @@ class CanvasPaint extends Component {
 
   drawBoard() {
     var pictureLength = Area.find({}).fetch().length;
+    console.log(pictureLength);
 
     var select = document.getElementById("selectNumber"); 
 
@@ -68,6 +69,7 @@ class CanvasPaint extends Component {
 
     const insertX = Math.floor(x/10);
     const insertY = Math.floor(y/10);
+    //console.log("click", insertX, insertY);
     var flag = false; //area.click
     for (var i = 0; i < this.props.area[this.state.index].area.length; i++) {
       var p = this.props.area[this.state.index].area[i];

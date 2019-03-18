@@ -21,7 +21,6 @@ Meteor.methods({
       throw new Meteor.Error("not-authorized");
     }
     var toBeSet = "area." + index.toString() + ".color";
-    console.log(area._id);
     Area.update({_id:area._id}, { $set: { [toBeSet]: setToColor } });
   },
 
