@@ -37,6 +37,7 @@ class LoginPage extends React.Component {
       error: ""
     };
     this.followCursor = this.followCursor.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -71,13 +72,14 @@ class LoginPage extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
-    let email = document.getElementById("login-email").value;
+    let email = document.getElementById("login-name").value;
     let password = document.getElementById("login-password").value;
     Meteor.loginWithPassword(email, password, (err) => {
       if(err){
         this.setState({
           error: err.reason
         });
+        console.log(err.reason);
       } else {
         this.props.history.push("/");
       }
@@ -112,7 +114,7 @@ class LoginPage extends React.Component {
                           alt="..."
                           src="assets/img/square-purple-1.png"
                         />
-                        <CardTitle tag="h4">Register</CardTitle>
+                        <CardTitle tag="h4">Login</CardTitle>
                       </CardHeader>
                       <CardBody>
                         <Form className="form">
@@ -129,6 +131,7 @@ class LoginPage extends React.Component {
                             <Input
                               placeholder="User Name"
                               type="text"
+                              id="login-name"
                               onFocus={e =>
                                 this.setState({ fullNameFocus: true })
                               }
@@ -149,6 +152,7 @@ class LoginPage extends React.Component {
                             </InputGroupAddon>
                             <Input
                               placeholder="Password"
+                              id="login-password"
                               type="password"
                               onFocus={e =>
                                 this.setState({ passwordFocus: true })
@@ -161,7 +165,7 @@ class LoginPage extends React.Component {
                         </Form>
                       </CardBody>
                       <CardFooter>
-                        <Button className="btn-round" color="primary" size="lg">
+                        <Button className="btn-round" color="primary" size="lg" onClick={this.handleSubmit}>
                           Get Started
                         </Button>
                       </CardFooter>
