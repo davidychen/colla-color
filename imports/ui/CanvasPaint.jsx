@@ -20,7 +20,8 @@ class CanvasPaint extends Component {
 
   drawBoard() {
     const ctx = this.canvas2.getContext("2d");
-
+    console.log(this.props.color);
+    
     for (const p of this.props.color.allColor) {
       ctx.fillStyle = p.color;
       ctx.fillRect(p.x * 20,  p.y * 20, 20, 20);
@@ -103,6 +104,14 @@ CanvasPaint.propTypes = {
 export default withTracker(() => {
   const handle = Meteor.subscribe("area");
   const handle2 = Meteor.subscribe("colorBoard");
+
+  if (ColorBoard.find({}).fetch()[0] == undefined) {
+    Meteor.call("colorBoard.insert");
+  }
+
+  if (Area.find({}).fetch()[0] == undefined) {
+    Meteor.call("area.insert");
+  }
   return {
     color: ColorBoard.find({}).fetch()[0],
     area: Area.find({}).fetch(),

@@ -23,5 +23,35 @@ Meteor.methods({
 
     
     Area.update(area._id, { $set: { color: setToColor } });
+  },
+
+  "area.insert"()  {
+    // Make sure the user is logged in before inserting a task
+    if (! this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    
+    Area.insert({
+      color:"#FF0F05",
+      coordinate:[{
+        x:26,
+        y:32
+      },{
+        x:27,
+        y:32
+      }]
+    });
+    
+    Area.insert({
+      color:"#FF0F05",
+      coordinate:[{
+        x:0,
+        y:1
+      },{
+        x:0,
+        y:0
+      }]
+    });
   }
 });
