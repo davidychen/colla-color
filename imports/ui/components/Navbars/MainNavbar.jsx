@@ -147,11 +147,24 @@ class MainNavbar extends React.Component {
                     tag={Link}
                     to="/gallery"
                     rel="noopener noreferrer"
-                    target="_blank"
                     title="View all Pieces"
                   >
                     <i className="fas fa-images" />
                     <p className="d-lg-none d-xl-none">Gallery</p>
+                  </NavLink>
+                </NavItem>
+              )}
+              {this.props.loggedIn && (
+                <NavItem className="p-0">
+                  <NavLink
+                    data-placement="bottom"
+                    tag={Link}
+                    to="/create"
+                    rel="noopener noreferrer"
+                    title="View all Pieces"
+                  >
+                    <i className="fas fa-images" />
+                    <p className="d-lg-none d-xl-none">Create</p>
                   </NavLink>
                 </NavItem>
               )}

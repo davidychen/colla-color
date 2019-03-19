@@ -17,6 +17,8 @@ react
 Clone the repo, then open the terminal on the folder created and run
 
 ```
+git clone https://github.com/davidychen/colla-color.git
+cd colla-color
 meteor npm install
 meteor reset
 meteor
