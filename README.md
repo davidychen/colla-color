@@ -1,6 +1,6 @@
 # colla-color
 
-A cooperative color filling game.
+A cooperative color filling game, which uses meteor, react.js and mongodb. You can fill color in the areas of a painting, view all paintings edited by all and create your own color filling template.
 
 # Deployment
 
@@ -32,7 +32,7 @@ You can either use a local meteor database or a cloud database. If you need to u
 
 # Author
 [Shuomin Wu](https://simonwux.github.io/)
-Shuomin Wu and Yifei Chen (link require)
+[Yifei Chen](http://davidychen.com/HomepageDavidChen/)
 
 # Screenshots
 
