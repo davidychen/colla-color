@@ -35,6 +35,9 @@ export default class NavBar extends Component {
               <li className="nav-item">
                 <Link to="/about">About</Link>
               </li>
+              <li className="nav-item">
+                <Link to="/create">Create</Link>
+              </li>
             </ul>
             <AccountsUIWrapper />
           </div>

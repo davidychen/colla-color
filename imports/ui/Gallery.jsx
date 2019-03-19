@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 
 import { Area } from "../api/area.js";
 
-var pictureLength = 0;
 class Gallery extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +28,6 @@ class Gallery extends Component {
 
   drawBoard() {
     var pictureLength = Area.find({}).fetch().length;
-    console.log(pictureLength);
 
     var select = document.getElementById("selectNumber"); 
 

@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { Area } from "../api/area.js";
 import { ColorBoard } from "../api/colorBoard.js";
 
-var pictureLength = 0;
 class CanvasPaint extends Component {
   constructor(props) {
     super(props);
@@ -30,7 +29,7 @@ class CanvasPaint extends Component {
 
   drawBoard() {
     var pictureLength = Area.find({}).fetch().length;
-    console.log(pictureLength);
+    //console.log(pictureLength);
 
     var select = document.getElementById("selectNumber"); 
 
