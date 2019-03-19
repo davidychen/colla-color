@@ -28,7 +28,7 @@ class Gallery extends Component {
 
   drawBoard() {
     var pictureLength = Area.find({}).fetch().length;
-
+    console.log(pictureLength);
     var select = document.getElementById("selectNumber"); 
 
     for(var i = 0; i < pictureLength; i++) {
