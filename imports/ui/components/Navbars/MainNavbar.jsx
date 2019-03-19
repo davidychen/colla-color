@@ -1,5 +1,8 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { withTracker } from "meteor/react-meteor-data";
 // reactstrap components
 import {
   Button,
@@ -29,7 +32,6 @@ class MainNavbar extends React.Component {
     this.toggleCollapse = this.toggleCollapse.bind(this);
     this.onCollapseExiting = this.onCollapseExiting.bind(this);
     this.onCollapseExited = this.onCollapseExited.bind(this);
-    this.scrollToDownload = this.scrollToDownload.bind(this);
     this.logout = this.logout.bind(this);
   }
   componentDidMount() {
@@ -37,6 +39,7 @@ class MainNavbar extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener("scroll", this.changeColor);
+    this.setState({collapseOpen: false});
   }
   changeColor() {
     if (
@@ -71,14 +74,16 @@ class MainNavbar extends React.Component {
       collapseOut: ""
     });
   }
-  scrollToDownload() {
-    document
-      .getElementById("download-section")
-      .scrollIntoView({ behavior: "smooth" });
-  }
 
-  logout(){
-
+  logout(e) {
+    e.preventDefault();
+    Meteor.logout(err => {
+      if (err) {
+        console.log(err.reason);
+      } else {
+        this.props.history.push("/login");
+      }
+    });
   }
   render() {
     return (
@@ -129,75 +134,82 @@ class MainNavbar extends React.Component {
                     className="navbar-toggler"
                     onClick={this.toggleCollapse}
                   >
-                    <i className="tim-icons icon-simple-remove" />
+                    <i className="fas fa-times" />
                   </button>
                 </Col>
               </Row>
             </div>
             <Nav navbar>
-              {this.props.loggedIn && <NavItem className="p-0">
-                <NavLink
-                  data-placement="bottom"
-                  tag={Link}
-                  to="/gallery"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  title="View all Pieces"
-                >
-                  <i className="fas fa-images" />
-                  <p className="d-lg-none d-xl-none">Gallery</p>
-                </NavLink>
-              </NavItem>}
-              {this.props.loggedIn && <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  href="#pablo"
-                  nav
-                  onClick={e => e.preventDefault()}
-                >
-                  <i className="fa fa-cogs d-lg-none d-xl-none" />
-                  {this.props.currentUser.username}
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-with-icons">
-                  <DropdownItem onClick={this.logout}>
+              {this.props.loggedIn && (
+                <NavItem className="p-0">
+                  <NavLink
+                    data-placement="bottom"
+                    tag={Link}
+                    to="/gallery"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    title="View all Pieces"
+                  >
+                    <i className="fas fa-images" />
+                    <p className="d-lg-none d-xl-none">Gallery</p>
+                  </NavLink>
+                </NavItem>
+              )}
+              {this.props.loggedIn && (
+                <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    href="#pablo"
+                    nav
+                    onClick={e => e.preventDefault()}
+                  >
                     <i className="fas fa-user" />
-                    Logout
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>}
-              {!this.props.loggedIn && <UncontrolledDropdown nav>
-                <DropdownToggle
-                  caret
-                  color="default"
-                  data-toggle="dropdown"
-                  href="#pablo"
-                  nav
-                  onClick={e => e.preventDefault()}
-                >
-                  <i className="fa fa-cogs d-lg-none d-xl-none" />
-                  Getting started
-                </DropdownToggle>
-                <DropdownMenu className="dropdown-with-icons">
-                  <DropdownItem tag={Link} to="/login">
-                    <i className="fas fa-user" />
-                    Login
-                  </DropdownItem>
-                  <DropdownItem tag={Link} to="/signup">
-                    <i className="fas fa-user-plus" />
-                    Sign Up
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>}
-              
+                    {this.props.user.username}
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-with-icons">
+                    <DropdownItem onClick={this.logout}>
+                      <i className="fas fa-sign-out-alt" />
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
+              {!this.props.loggedIn && (
+                <UncontrolledDropdown nav>
+                  <DropdownToggle
+                    caret
+                    color="default"
+                    data-toggle="dropdown"
+                    href="#pablo"
+                    nav
+                    onClick={e => e.preventDefault()}
+                  >
+                    <i className="fas fa-paint-brush" />
+                    Getting started
+                  </DropdownToggle>
+                  <DropdownMenu className="dropdown-with-icons">
+                    <DropdownItem tag={Link} to="/login">
+                      <i className="fas fa-user" />
+                      Login
+                    </DropdownItem>
+                    <DropdownItem tag={Link} to="/signup">
+                      <i className="fas fa-user-plus" />
+                      Sign Up
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              )}
+
               <NavItem>
                 <Button
                   className="nav-link d-none d-lg-block"
                   color="default"
-                  onClick={this.scrollToDownload}
+                  href="https://github.com/davidychen/colla-color"
+                  target="_blank"
                 >
-                  <i className="tim-icons icon-cloud-download-93" /> Download
+                  <i className="fab fa-github" /> Code
                 </Button>
               </NavItem>
             </Nav>
@@ -208,4 +220,18 @@ class MainNavbar extends React.Component {
   }
 }
 
-export default MainNavbar;
+MainNavbar.propTypes = {
+  user: PropTypes.object,
+  loggedIn: PropTypes.bool,
+  history: PropTypes.object
+};
+
+export default withTracker(() => {
+  const user = Meteor.user();
+  const userDataAvailable = user !== undefined;
+  const loggedIn = user && userDataAvailable;
+  return {
+    user: user,
+    loggedIn: loggedIn
+  };
+})(MainNavbar);

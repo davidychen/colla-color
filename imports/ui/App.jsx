@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import NavBar from "./NavBar.jsx";
@@ -13,6 +14,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import CanvasPaint from "./CanvasPaint.jsx";
 import Gallery from "./Gallery.jsx";
+import MainNavBar from "./components/Navbars/MainNavbar.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
@@ -49,11 +51,16 @@ const NotFoundPage = () => (
 );
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
+    console.log(this.props.user);
     return (
       <Router>
         <div>
-          <NavBar />
+          <MainNavBar />
           <Switch>
             <Route exact path="/" component={HomeComponent} />
             <Route exact path="/gallery" component={GalleryComponent} />
@@ -62,10 +69,7 @@ class App extends Component {
               path="/landing-page"
               render={props => <LandingPage {...props} />}
             />
-            <Route
-              path="/login"
-              render={props => <LoginPage {...props} />}
-            />
+            <Route path="/login" render={props => <LoginPage {...props} />} />
             <Route
               path="/signup"
               render={props => <RegisterPage {...props} />}
@@ -79,8 +83,17 @@ class App extends Component {
   }
 }
 
+App.propTypes = {
+  user: PropTypes.object,
+  loggedIn: PropTypes.bool
+};
+
 export default withTracker(() => {
+  const user = Meteor.user();
+  const userDataAvailable = user !== undefined;
+  const loggedIn = user && userDataAvailable;
   return {
-    user: Meteor.user()
+    user: user,
+    loggedIn: loggedIn
   };
 })(App);

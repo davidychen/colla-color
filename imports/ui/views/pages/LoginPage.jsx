@@ -26,7 +26,6 @@ import {
 } from "reactstrap";
 
 // core components
-import Navbar from "../../components/Navbars/Navbar.jsx";
 import Footer from "../../components/Footer/Footer.jsx";
 
 class LoginPage extends React.Component {
@@ -98,7 +97,6 @@ class LoginPage extends React.Component {
     const error = this.state.error;
     return (
       <div>
-        <Navbar />
         <div className="wrapper">
           <div className="page-header">
             <div className="page-header-image" />
