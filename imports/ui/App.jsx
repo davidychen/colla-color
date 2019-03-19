@@ -14,7 +14,9 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import CanvasPaint from "./CanvasPaint.jsx";
 import Gallery from "./Gallery.jsx";
+
 import MainNavBar from "./components/Navbars/MainNavbar.jsx";
+import Create from "./Create.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
@@ -44,6 +46,13 @@ const GalleryComponent = () => (
   </div>
 );
 
+const CreateComponent = () => (
+  <div>
+    <h2>Create</h2>
+    {Meteor.user() ? <Create /> : <div>Please login!</div>}
+  </div>
+);
+
 const NotFoundPage = () => (
   <div>
     <h2>404 Page not found</h2>
@@ -65,6 +74,7 @@ class App extends Component {
             <Route exact path="/" component={HomeComponent} />
             <Route exact path="/gallery" component={GalleryComponent} />
             <Route exact path="/about" component={AboutComponent} />
+            <Route exact path="/create" component={CreateComponent} />
             <Route
               path="/landing-page"
               render={props => <LandingPage {...props} />}

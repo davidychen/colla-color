@@ -88,5 +88,14 @@ Meteor.methods({
         y:12
       }]
     }]});
+  },
+
+  "area.add"(newPict)  {
+    // Make sure the user is logged in before inserting a task
+    if (! this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
+    Area.insert(newPict);
+    
   }
 });
