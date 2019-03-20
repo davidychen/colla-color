@@ -1,6 +1,10 @@
 import React from "react";
 // react plugin used to create charts
 import { Line } from "react-chartjs-2";
+import { ChromePicker } from "react-color";
+import reactCSS from "reactcss";
+
+import LandingCanvas from "../../components/Canvas/LandingCanvas.jsx";
 // reactstrap components
 import {
   Button,
@@ -22,119 +26,117 @@ import Footer from "/imports/ui/components/Footer/Footer.jsx";
 import bigChartData from "/imports/ui/variables/charts.jsx";
 
 class LandingPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      color: "#fff",
+      tests: [[0, 0, 0, 0], [1, 1, 1, 1], [2, 2, 2, 2], [3, 3, 3, 3]],
+      time: Date.now(),
+      n: 5,
+      markers: []
+    };
+    this.toUp = [[0, 0, 5]];
+    this.handleColorChange = this.handleColorChange.bind(this);
+    // this.updateNumer = this.updateNumer.bind(this);
+  }
+  handleColorChange(color) {
+    this.setState({ color: color.hex });
+    // this.updateNumer(0, 0, this.state.n);
+    this.setState({ n: this.state.n + 1 });
+    this.timeout(3);
+  }
+  timeout(n) {
+    if (n == 0) return;
+    setTimeout(() => {
+      this.setState({ n: this.state.n + 1 });
+      console.log(this.state.n);
+      // Do Something Here
+      // Then recall the parent function to
+      // create a recursive loop.
+      this.timeout(n - 1);
+    }, 1000);
+  }
+
+  updateNumer(r, c, n) {
+    if (r < 0 || c < 0 || r > 3 || c > 3 || n > 100) return;
+    const tests = this.state.tests;
+    if (tests[r][c] == n) return;
+    tests[r][c] = n;
+    this.setState({ tests: tests });
+    console.log(new Date(), r, c, n, this.state.tests);
+    setTimeout(() => {
+      this.updateNumer(r + 1, c, n);
+    }, 1000);
+    var that = this;
+    setTimeout(function() {
+      that.updateNumer(r, c - 1, n);
+    }, 1000);
+    setTimeout(
+      function() {
+        this.updateNumer(r, c + 1, n);
+      }.bind(this),
+      1000
+    );
+    setTimeout(
+      function() {
+        this.updateNumer(r - 1, c, n);
+      }.bind(this),
+      1000
+    );
+  }
   componentDidMount() {
     document.body.classList.toggle("landing-page");
+    let todos = [10, 20, 30];
+    this.interval = setInterval(() => {
+      this.setState(prev => ({
+        markers: prev.markers.concat([todos.shift()])
+      }));
+      if (!todos.length) clearInterval(this.interval);
+    }, 1000);
   }
   componentWillUnmount() {
     document.body.classList.toggle("landing-page");
+    clearInterval(this.interval);
   }
   render() {
+    const tests = this.state.tests;
     return (
       <>
         <div className="wrapper">
-          <div className="page-header">
-            <img
-              alt="..."
-              className="path"
-              src="assets/img/blob.png"
-            />
-            <img
-              alt="..."
-              className="path2"
-              src="assets/img/path2.png"
-            />
-            <img
-              alt="..."
-              className="shapes triangle"
-              src="assets/img/triunghiuri.png"
-            />
-            <img
-              alt="..."
-              className="shapes wave"
-              src="assets/img/waves.png"
-            />
-            <img
-              alt="..."
-              className="shapes squares"
-              src="assets/img/patrat.png"
-            />
-            <img
-              alt="..."
-              className="shapes circle"
-              src="assets/img/cercuri.png"
-            />
-            <div className="content-center">
+          <section className="section section-lg">
+            <section className="section">
               <Row className="row-grid justify-content-between align-items-center text-left">
                 <Col lg="6" md="6">
                   <h1 className="text-white">
-                    We keep your coin <br />
-                    <span className="text-white">secured</span>
+                    Let&apos;s Color <br />
+                    <span className="text-white">together!</span>
                   </h1>
-                  <p className="text-white mb-3">
-                    A wonderful serenity has taken possession of my entire soul,
-                    like these sweet mornings of spring which I enjoy with my
-                    whole heart. I am alone, and feel...
-                  </p>
-                  <div className="btn-wrapper mb-3">
-                    <p className="category text-success d-inline">
-                      From 9.99%/mo
-                    </p>
-                    <Button
-                      className="btn-link"
-                      color="success"
-                      href="#pablo"
-                      onClick={e => e.preventDefault()}
-                      size="sm"
-                    >
-                      <i className="fas fa-chevron-right"></i>
-                    </Button>
-                  </div>
-                  <div className="btn-wrapper">
-                    <div className="button-container">
-                      <Button
-                        className="btn-icon btn-simple btn-round btn-neutral"
-                        color="default"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className="fab fa-twitter" />
-                      </Button>
-                      <Button
-                        className="btn-icon btn-simple btn-round btn-neutral"
-                        color="default"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className="fab fa-dribbble" />
-                      </Button>
-                      <Button
-                        className="btn-icon btn-simple btn-round btn-neutral"
-                        color="default"
-                        href="#pablo"
-                        onClick={e => e.preventDefault()}
-                      >
-                        <i className="fab fa-facebook" />
-                      </Button>
-                    </div>
-                  </div>
+                  <LandingCanvas />
                 </Col>
                 <Col lg="4" md="5">
-                  <img
-                    alt="..."
-                    className="img-fluid"
-                    src="assets/img/etherum.png"
-                  />
+                  <h1 className="text-white" />
+                  <p className="text-white mb-3 center text-center">
+                    Use the color you pick to fill the piece!
+                  </p>
+                  <p> {this.state.n}</p>
+                  <p>{tests}</p>
+                  <p>{this.state.markers}</p>
+                  <p> {this.state.time}</p>
+                  <div className="text-white mb-3 center">
+                    <ChromePicker
+                      className="center"
+                      disableAlpha
+                      color={this.state.color}
+                      onChange={this.handleColorChange}
+                    />
+                  </div>
                 </Col>
               </Row>
-            </div>
-          </div>
+            </section>
+          </section>
           <section className="section section-lg">
             <section className="section">
-              <img
-                alt="..."
-                className="path"
-                src="assets/img/path4.png"
-              />
+              <img alt="..." className="path" src="assets/img/path4.png" />
               <Container>
                 <Row className="row-grid justify-content-between">
                   <Col className="mt-lg-5" md="5">
@@ -257,21 +259,9 @@ class LandingPage extends React.Component {
             </section>
           </section>
           <section className="section section-lg">
-            <img
-              alt="..."
-              className="path"
-              src="assets/img/path4.png"
-            />
-            <img
-              alt="..."
-              className="path2"
-              src="assets/img/path5.png"
-            />
-            <img
-              alt="..."
-              className="path3"
-              src="assets/img/path2.png"
-            />
+            <img alt="..." className="path" src="assets/img/path4.png" />
+            <img alt="..." className="path2" src="assets/img/path5.png" />
+            <img alt="..." className="path3" src="assets/img/path2.png" />
             <Container>
               <Row className="justify-content-center">
                 <Col lg="12">
@@ -325,11 +315,7 @@ class LandingPage extends React.Component {
             </Container>
           </section>
           <section className="section section-lg section-safe">
-            <img
-              alt="..."
-              className="path"
-              src="assets/img/path5.png"
-            />
+            <img alt="..." className="path" src="assets/img/path5.png" />
             <Container>
               <Row className="row-grid justify-content-between">
                 <Col md="5">
@@ -378,7 +364,7 @@ class LandingPage extends React.Component {
                     <p>
                       The design system comes with three pre-built pages to help
                       you get started faster. You can change the text and images
-                      and you're good to go.
+                      and you&apos;re good to go.
                     </p>
                     <ul className="list-unstyled mt-5">
                       <li className="py-2">
@@ -418,16 +404,8 @@ class LandingPage extends React.Component {
             </Container>
           </section>
           <section className="section section-lg">
-            <img
-              alt="..."
-              className="path"
-              src="assets/img/path4.png"
-            />
-            <img
-              alt="..."
-              className="path2"
-              src="assets/img/path2.png"
-            />
+            <img alt="..." className="path" src="assets/img/path4.png" />
+            <img alt="..." className="path2" src="assets/img/path2.png" />
             <Col md="12">
               <Card className="card-chart card-plain">
                 <CardHeader>
@@ -451,11 +429,7 @@ class LandingPage extends React.Component {
             </Col>
           </section>
           <section className="section section-lg section-coins">
-            <img
-              alt="..."
-              className="path"
-              src="assets/img/path3.png"
-            />
+            <img alt="..." className="path" src="assets/img/path3.png" />
             <Container>
               <Row>
                 <Col md="4">

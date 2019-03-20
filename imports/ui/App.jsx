@@ -34,6 +34,7 @@ const HomeComponent = () => {
 
 const AboutComponent = () => (
   <div>
+    <NavBar/>
     <h2>About</h2>
     <div>This is a cooperative filling color game.</div>
   </div>

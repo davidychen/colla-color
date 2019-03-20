@@ -70,7 +70,8 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   -ms-overflow-style: scrollbar;
-  -webkit-tap-highlight-color: rgba(34, 42, 66, 0); }
+  -webkit-tap-highlight-color: rgba(34, 42, 66, 0); 
+  touch-action: manipulation;}
 
 @-ms-viewport {
   width: device-width; }
@@ -15315,3 +15316,7 @@ td.rdtYear:hover {
   color: #1d8cf8; }
   .blockquote.blockquote-info small {
     color: #1d8cf8; }
+
+.center {
+  margin: auto;
+}
