@@ -5,7 +5,6 @@ import { check } from "meteor/check";
 export const LandingPiece = new Mongo.Collection("landing-piece");
 LandingPiece.insert({
   size: 20,
-  editors:[],
   areas: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -28,7 +27,18 @@ LandingPiece.insert({
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   ],
-  colors: ["#FFFFFF","#F3D1D1","#951CD2","#EB0B80",]
+  colors: [
+    "#FFFFFF",
+    "#F3D1D1",
+    "#951CD2",
+    "#EB0B80",
+    "#F36105",
+    "#6CB6EF",
+    "#58ED4E",
+    "#F2F533",
+    "#000000"
+  ],
+  editors: [{}, {}, {}, {}, {}, {}, {}, {}, {}]
 });
 
 if (Meteor.isServer) {
