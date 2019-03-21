@@ -1,6 +1,14 @@
 import React from "react";
 import classnames from "classnames";
-import { withHistory, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter,
+  withHistory
+} from "react-router-dom";
+import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 // reactstrap components
@@ -36,7 +44,8 @@ class RegisterPage extends React.Component {
       squares1to6: "",
       squares7and8: "",
       error: "",
-      errorVisible: false
+      errorVisible: false,
+      redirectToReferrer: false
     };
     this.followCursor = this.followCursor.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -46,6 +55,14 @@ class RegisterPage extends React.Component {
   componentDidMount() {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
+    if (this.props.location.state) {
+      if (this.props.location.state.from.pathname != "/signup") {
+        this.setState({
+          error: "You need to log in to view the content. ",
+          errorVisible: true
+        });
+      }
+    }
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
@@ -84,7 +101,8 @@ class RegisterPage extends React.Component {
           errorVisible: true
         });
       } else {
-        this.props.history.push("/login");
+        this.setState({ redirectToReferrer: true });
+        // this.props.history.push("/login");
       }
     });
   }
@@ -95,6 +113,12 @@ class RegisterPage extends React.Component {
 
   render() {
     const error = this.state.error;
+    let { from } = this.props.location.state || {
+      from: { pathname: "/gallery" }
+    };
+    let { redirectToReferrer } = this.state;
+
+    if (Meteor.user() || redirectToReferrer) return <Redirect to={from} />;
     return (
       <div>
         <div className="wrapper">
@@ -234,11 +258,14 @@ class RegisterPage extends React.Component {
               </Container>
             </div>
           </div>
-          <Footer />
         </div>
       </div>
     );
   }
 }
+
+RegisterPage.propTypes = {
+  location: PropTypes.object
+};
 
 export default RegisterPage;

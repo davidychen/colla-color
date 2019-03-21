@@ -34,6 +34,17 @@ if (Meteor.isServer) {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ],
+      default: [
+        "#FFFFFF",
+        "#F3D1D1",
+        "#951CD2",
+        "#EB0B80",
+        "#F36105",
+        "#6CB6EF",
+        "#58ED4E",
+        "#F2F533",
+        "#000000"
+      ],
       colors: [
         "#FFFFFF",
         "#F3D1D1",
@@ -87,6 +98,13 @@ if (Meteor.isServer) {
         [0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ],
+      default: [
+        "#FFFFFF",
+        "#B32F02",
+        "#FFFF00",
+        "#ED8C04",
+        "#EFB505"
       ],
       colors: [
         "#FFFFFF",
@@ -148,6 +166,15 @@ if (Meteor.isServer) {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 2, 2, 2, 6, 6, 6, 0, 0, 0, 0, 0, 0, 6, 6, 2, 2, 2, 6, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0]
       ],
+      default: [
+        "#FFFFFF",
+        "#FFFFFF",
+        "#FFED00",
+        "#FFB700",
+        "#FF0000",
+        "#A7772A",
+        "#000000"
+      ],
       colors: [
         "#FFFFFF",
         "#FFFFFF",
@@ -189,6 +216,29 @@ if (Meteor.isServer) {
       }
     );
   });
+  Meteor.publish("piece-withId", function piecePublication(pieceId) {
+    check(pieceId, String);
+
+    return Pieces.find(
+      {_id: pieceId},
+      {
+        fields: {
+          name: 1,
+          owner: 1,
+          createdAt: 1,
+          private: 1,
+          size: 1,
+          board: 1,
+          colors: 1,
+          cells: 1,
+          editor: 1,
+          modifiedAt: 1,
+          fills: 1
+        },
+        limit: 1
+      }
+    );
+  });
 }
 
 Meteor.methods({
@@ -197,27 +247,35 @@ Meteor.methods({
     check(r, Number);
     check(c, Number);
     check(color, String);
+    // Make sure the user is logged in before inserting a task
+    if (! this.userId) {
+      throw new Meteor.Error("not-authorized");
+    }
     color = color.toUpperCase();
+    console.log("up");
     const res = Pieces.findOne({_id: id});
     if (res) {
       const area = res.board[r][c];
       const oldColor = res.colors[area];
-      const oldEditor = res.editors[area];
-      const oldModify = res.modifiedAt[area];
-      console.log(res, color, oldColor);
+      const oldEditor = res.editor;
+      const oldModify = res.modifiedAt;
       if (!(color === oldColor)) {
         const colorString = "colors." + area;
         const cellString = "cells." + area;
-        const editorString = "editors." + area;
-        const modifyString = "modifiedAt." + area;
+        const editorString = "editor";
+        const modifyString = "modifiedAt";
+        console.log("up");
         Pieces.update(
-          {},
+          {_id: id},
           {
             $set: {
               [colorString]: color,
               [cellString]: { r, c },
-              [editorString]: this.userId ? Meteor.user().username : oldEditor,
-              [modifyString]: this.userId ? new Date() : oldModify
+              [editorString]: Meteor.user().username,
+              [modifyString]: new Date()
+            },
+            $inc: {
+              fills: 1
             }
           }
         );

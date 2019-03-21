@@ -20,7 +20,6 @@ import PropTypes from "prop-types";
 import { Pieces } from "../../../api/pieces.js";
 
 // core components
-import Footer from "/imports/ui/components/Footer/Footer.jsx";
 import GalleryItem from "../../components/Gallery/GalleryItem.jsx";
 
 class GalleryPage extends React.Component {
@@ -73,7 +72,6 @@ class GalleryPage extends React.Component {
               {this.renderItems()}
             </Container>
           </section>
-          <Footer />
         </div>
       </div>
     );

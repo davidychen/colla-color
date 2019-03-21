@@ -62,7 +62,6 @@ class LandingPage extends React.Component {
               </Row>
             </section>
           </section>
-          <Footer />
         </div>
       </>
     );

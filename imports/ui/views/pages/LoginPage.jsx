@@ -1,6 +1,14 @@
 import React from "react";
 import classnames from "classnames";
-import { withHistory, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+  withRouter,
+  withHistory
+} from "react-router-dom";
+import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 // reactstrap components
 import {
@@ -35,7 +43,8 @@ class LoginPage extends React.Component {
       squares1to6: "",
       squares7and8: "",
       error: "",
-      errorVisible: false
+      errorVisible: false,
+      redirectToReferrer: false
     };
     this.followCursor = this.followCursor.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -45,6 +54,15 @@ class LoginPage extends React.Component {
   componentDidMount() {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", this.followCursor);
+    if (this.props.location.state) {
+      if (this.props.location.state.from.pathname != "/login") {
+        // console.log(this.props.location.state.from.pathname);
+        this.setState({
+          error: "You need to log in to view the content. ",
+          errorVisible: true
+        });
+      }
+    }
   }
   componentWillUnmount() {
     document.body.classList.toggle("register-page");
@@ -84,7 +102,8 @@ class LoginPage extends React.Component {
         });
         console.log(err.reason);
       } else {
-        this.props.history.push("/");
+        this.setState({ redirectToReferrer: true });
+        // this.props.history.push("/");
       }
     });
   }
@@ -95,6 +114,13 @@ class LoginPage extends React.Component {
 
   render() {
     const error = this.state.error;
+    let { from } = this.props.location.state || {
+      from: { pathname: "/gallery" }
+    };
+
+    let { redirectToReferrer } = this.state;
+
+    if (Meteor.user() || redirectToReferrer) return <Redirect to={from} />;
     return (
       <div>
         <div className="wrapper">
@@ -149,10 +175,10 @@ class LoginPage extends React.Component {
                               placeholder="User Name"
                               type="text"
                               id="login-name"
-                              onFocus={e =>
+                              onFocus={() =>
                                 this.setState({ fullNameFocus: true })
                               }
-                              onBlur={e =>
+                              onBlur={() =>
                                 this.setState({ fullNameFocus: false })
                               }
                             />
@@ -171,10 +197,10 @@ class LoginPage extends React.Component {
                               placeholder="Password"
                               id="login-password"
                               type="password"
-                              onFocus={e =>
+                              onFocus={() =>
                                 this.setState({ passwordFocus: true })
                               }
-                              onBlur={e =>
+                              onBlur={() =>
                                 this.setState({ passwordFocus: false })
                               }
                             />
@@ -192,7 +218,7 @@ class LoginPage extends React.Component {
                         </Button>
                         <div className="form-group text-center">
                           <p className="text-center">
-                            Don't have an account? Register{" "}
+                            Don&apos;t have an account? Register{" "}
                             <Link to="/signup">here</Link>
                           </p>
                         </div>
@@ -234,11 +260,14 @@ class LoginPage extends React.Component {
               </Container>
             </div>
           </div>
-          <Footer />
         </div>
       </div>
     );
   }
 }
+
+LoginPage.propTypes = {
+  location: PropTypes.object
+};
 
 export default LoginPage;

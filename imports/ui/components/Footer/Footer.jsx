@@ -1,5 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import { Link, withRouter } from "react-router-dom";
+import { Meteor } from "meteor/meteor";
+import { withTracker } from "meteor/react-meteor-data";
 // reactstrap components
 import {
   Button,
@@ -13,13 +16,17 @@ import {
 } from "reactstrap";
 
 class Footer extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <footer className="footer">
         <Container>
           <Row>
             <Col md="3">
-              <h1 className="title">BLK•</h1>
+              <h1 className="title">CC•</h1>
             </Col>
             <Col md="3">
               <Nav>
@@ -28,40 +35,17 @@ class Footer extends React.Component {
                     Home
                   </NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink to="/landing-page" tag={Link}>
-                    Landing
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/register-page" tag={Link}>
-                    Register
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink to="/profile-page" tag={Link}>
-                    Profile
-                  </NavLink>
-                </NavItem>
+                {this.props.loggedIn && (
+                  <NavItem>
+                    <NavLink to="/gallery" tag={Link}>
+                      Gallery
+                    </NavLink>
+                  </NavItem>
+                )}
               </Nav>
             </Col>
             <Col md="3">
               <Nav>
-                <NavItem>
-                  <NavLink href="https://creative-tim.com/contact-us?ref=blkdsr-footer">
-                    Contact Us
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="https://creative-tim.com/about-us?ref=blkdsr-footer">
-                    About Us
-                  </NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink href="https://creative-tim.com/blog?ref=blkdsr-footer">
-                    Blog
-                  </NavLink>
-                </NavItem>
                 <NavItem>
                   <NavLink href="https://opensource.org/licenses/MIT">
                     License
@@ -70,43 +54,43 @@ class Footer extends React.Component {
               </Nav>
             </Col>
             <Col md="3">
-              <h3 className="title">Follow us:</h3>
+              <h3 className="title">Who we are:</h3>
               <div className="btn-wrapper profile">
                 <Button
                   className="btn-icon btn-neutral btn-round btn-simple"
                   color="default"
-                  href="https://twitter.com/creativetim"
+                  href="http://davidychen.com"
                   id="tooltip622135962"
                   target="_blank"
                 >
-                  <i className="fab fa-twitter" />
+                  <i className="fas fa-heart" />
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip622135962">
-                  Follow us
+                  David Chen
                 </UncontrolledTooltip>
                 <Button
                   className="btn-icon btn-neutral btn-round btn-simple"
                   color="default"
-                  href="https://www.facebook.com/creativetim"
+                  href="https://simonwux.github.io/"
                   id="tooltip230450801"
                   target="_blank"
                 >
-                  <i className="fab fa-facebook-square" />
+                  <i className="fas fa-star" />
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip230450801">
-                  Like us
+                  Simon Wu
                 </UncontrolledTooltip>
                 <Button
                   className="btn-icon btn-neutral btn-round btn-simple"
                   color="default"
-                  href="https://dribbble.com/creativetim"
+                  href="https://github.com/davidychen/colla-color"
                   id="tooltip318450378"
                   target="_blank"
                 >
-                  <i className="fab fa-dribbble" />
+                  <i className="fab fa-github" />
                 </Button>
                 <UncontrolledTooltip delay={0} target="tooltip318450378">
-                  Follow us
+                  Github
                 </UncontrolledTooltip>
               </div>
             </Col>
@@ -117,4 +101,20 @@ class Footer extends React.Component {
   }
 }
 
-export default Footer;
+Footer.propTypes = {
+  user: PropTypes.object,
+  loggedIn: PropTypes.bool,
+  history: PropTypes.object
+};
+
+export default withRouter(
+  withTracker(() => {
+    const user = Meteor.user();
+    const userDataAvailable = user !== undefined;
+    const loggedIn = user && userDataAvailable;
+    return {
+      user: user,
+      loggedIn: loggedIn
+    };
+  })(Footer)
+);

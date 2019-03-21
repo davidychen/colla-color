@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
-import NavBar from "./NavBar.jsx";
+
 
 import "./assets/css/colla-color.css";
 import "./assets/demo/demo.css";
@@ -10,25 +10,26 @@ import "./assets/demo/demo.css";
 // import Area from "../api/area.js";
 // import ColorBoard from "../api/colorBoard.js";
 
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Redirect,
+  withRouter
+} from "react-router-dom";
 
-import CanvasPaint from "./CanvasPaint.jsx";
-import Gallery from "./Gallery.jsx";
 
 import MainNavBar from "./components/Navbars/MainNavbar.jsx";
+import Footer from "./components/Footer/Footer.jsx";
+
 import Create from "./Create.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
 import GalleryPage from "./views/pages/GalleryPage.jsx";
+import FillPage from "./views/pages/FillPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
-import AccountsUIWrapper from "./AccountsUIWrapper.jsx";
+import NotFoundPage from "./views/pages/NotFoundPage.jsx";
 
-const GalleryComponent = () => (
-  <div>
-    <h2>Gallery</h2>
-    <Gallery />
-  </div>
-);
 
 const CreateComponent = () => (
   <div>
@@ -37,11 +38,32 @@ const CreateComponent = () => (
   </div>
 );
 
-const NotFoundPage = () => (
-  <div>
-    <h2>404 Page not found</h2>
-  </div>
-);
+
+
+function PrivateRoute({ component: Component, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        Meteor.user() ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func,
+  location: PropTypes.object
+};
 
 class App extends Component {
   constructor(props) {
@@ -59,21 +81,24 @@ class App extends Component {
               path="/"
               render={props => <LandingPage {...props} />}
             />
-            <Route
-              exact
+            <PrivateRoute
               path="/gallery"
-              render={props => <GalleryPage {...props} />}
+              component= {GalleryPage }
             />
-            <Route exact path="/create" component={CreateComponent} />
+            <PrivateRoute
+              path="/fill/:pieceId"
+              component= {FillPage }
+            />
+            <Route path="/create" component={CreateComponent} />
 
             <Route path="/login" render={props => <LoginPage {...props} />} />
             <Route
-              exact
               path="/signup"
               render={props => <RegisterPage {...props} />}
             />
             <Route component={NotFoundPage} />
           </Switch>
+          <Footer />
           <br />
         </div>
       </Router>

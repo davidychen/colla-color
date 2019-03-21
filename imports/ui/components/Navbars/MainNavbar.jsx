@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 // reactstrap components
@@ -39,7 +39,7 @@ class MainNavbar extends React.Component {
   }
   componentWillUnmount() {
     window.removeEventListener("scroll", this.changeColor);
-    this.setState({collapseOpen: false});
+    this.setState({ collapseOpen: false });
   }
   changeColor() {
     if (
@@ -154,20 +154,7 @@ class MainNavbar extends React.Component {
                   </NavLink>
                 </NavItem>
               )}
-              {this.props.loggedIn && (
-                <NavItem className="p-0">
-                  <NavLink
-                    data-placement="bottom"
-                    tag={Link}
-                    to="/create"
-                    rel="noopener noreferrer"
-                    title="View all Pieces"
-                  >
-                    <i className="fas fa-images" />
-                    <p className="d-lg-none d-xl-none">Create</p>
-                  </NavLink>
-                </NavItem>
-              )}
+              
               {this.props.loggedIn && (
                 <UncontrolledDropdown nav>
                   <DropdownToggle
@@ -239,12 +226,14 @@ MainNavbar.propTypes = {
   history: PropTypes.object
 };
 
-export default withTracker(() => {
-  const user = Meteor.user();
-  const userDataAvailable = user !== undefined;
-  const loggedIn = user && userDataAvailable;
-  return {
-    user: user,
-    loggedIn: loggedIn
-  };
-})(MainNavbar);
+export default withRouter(
+  withTracker(() => {
+    const user = Meteor.user();
+    const userDataAvailable = user !== undefined;
+    const loggedIn = user && userDataAvailable;
+    return {
+      user: user,
+      loggedIn: loggedIn
+    };
+  })(MainNavbar)
+);

@@ -1,44 +1,30 @@
 // canvas.js
 
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  ListGroupItem,
-  ListGroup,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
-
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  withHistory
-} from "react-router-dom";
-
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
+import { Pieces } from "../../../api/pieces.js";
 
-class GalleryItem extends Component {
+export default  class FillCanvas extends Component {
   constructor(props) {
     super(props);
+    this.onMouseDown = this.onMouseDown.bind(this);
+    this.onMouseMove = this.onMouseMove.bind(this);
+    this.endPaintEvent = this.endPaintEvent.bind(this);
+    this.onClick = this.onClick.bind(this);
     this.state = {
-      width: 0
+      width: 0,
+      size: 0,
+      loaded: false,
+      isPainting: false,
+      color: "",
+      line: [],
+      prevPos: { offsetX: 0, offsetY: 0 }
     };
     this.loaded = false;
     this.size = 0;
     this.board = [];
-    this.onFill = this.onFill.bind(this);
   }
 
   /**
@@ -52,8 +38,42 @@ class GalleryItem extends Component {
     this.drawBoard();
   }
 
+  onClick({ nativeEvent }) {
+    const { offsetX, offsetY } = nativeEvent;
+    const r = Math.floor(offsetY / this.cellSize);
+    const c = Math.floor(offsetX / this.cellSize);
+    Meteor.call("piece.fill",  this.props.item._id,  r, c, this.props.color);
+  }
+
+  onMouseDown({ nativeEvent }) {
+    const { offsetX, offsetY } = nativeEvent;
+    this.isPainting = true;
+    this.prevPos = { offsetX, offsetY };
+  }
+
+  onMouseMove({ nativeEvent }) {
+    if (this.isPainting) {
+      const { offsetX, offsetY } = nativeEvent;
+      const offSetData = { offsetX, offsetY };
+      // Set the start and stop position of the paint event.
+      const positionData = {
+        start: { ...this.prevPos },
+        stop: { ...offSetData }
+      };
+      // Add the position to the line array
+      this.line = this.line.concat(positionData);
+      this.paint(this.prevPos, offSetData, this.userStrokeStyle);
+    }
+  }
+  endPaintEvent() {
+    if (this.isPainting) {
+      this.isPainting = false;
+      // this.sendPaintData();
+    }
+  }
   fillOne(r, c, color, area, visited) {
     if (r < 0 || r >= this.size || c < 0 || c >= this.size) return;
+
     if (visited[r][c]) return;
     const board = this.props.item.board;
     const boardArea = board[r][c];
@@ -63,7 +83,12 @@ class GalleryItem extends Component {
       if (this.board[r][c] !== this.colors[area]) {
         this.ctx.clearRect(cellSize * c, cellSize * r, cellSize, cellSize);
         this.ctx.fillStyle = color;
-        this.ctx.fillRect(cellSize * c, cellSize * r, cellSize, cellSize);
+        this.ctx.fillRect(
+          cellSize * c + 1,
+          cellSize * r + 1,
+          cellSize - 1,
+          cellSize - 1
+        );
         this.board[r][c] = color;
       }
       setTimeout(() => {
@@ -83,15 +108,16 @@ class GalleryItem extends Component {
   }
   drawBoard() {
     if (!this.canvas || !this.props.item.colors) return;
+
     this.ctx = this.canvas.getContext("2d");
     const board = this.props.item.board;
-
     const colors = this.props.item.colors;
     const size = this.props.item.size;
-    const cellSize = this.state.width / size;
+    const cellSize = (this.state.width - 1) / size;
     this.size = size;
     this.cellSize = cellSize;
 
+console.log(this.props.item.cells, size, cellSize);
     if (!this.loaded) {
       this.board = [];
       this.colors = colors;
@@ -101,7 +127,12 @@ class GalleryItem extends Component {
         for (let c = 0; c < size; c++) {
           const area = board[r][c];
           this.ctx.fillStyle = colors[area];
-          this.ctx.fillRect(cellSize * c, cellSize * r, cellSize, cellSize);
+          this.ctx.fillRect(
+            cellSize * c + 1,
+            cellSize * r + 1,
+            cellSize - 1,
+            cellSize - 1
+          );
           subboard.push(colors[area]);
         }
         this.board.push(subboard);
@@ -125,10 +156,21 @@ class GalleryItem extends Component {
         }
       }
     }
+    
   }
+  paint(prevPos, currPos, strokeStyle) {
+    const { offsetX, offsetY } = currPos;
+    const { offsetX: x, offsetY: y } = prevPos;
 
-  onFill() {
-    this.props.history.push("/fill/" + this.props.item._id);
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = strokeStyle;
+    // Move the the prevPosition of the mouse
+    this.ctx.moveTo(x, y);
+    // Draw a line to the current position of the mouse
+    this.ctx.lineTo(offsetX, offsetY);
+    // Visualize the line using the strokeStyle
+    this.ctx.stroke();
+    this.prevPos = { offsetX, offsetY };
   }
 
   componentDidMount() {
@@ -157,54 +199,25 @@ class GalleryItem extends Component {
         width={this.state.width}
         height={this.state.width}
         style={{ background: "#787878" }}
+        onMouseDown={this.onMouseDown}
+        onMouseLeave={this.endPaintEvent}
+        onMouseUp={this.endPaintEvent}
+        onClick={this.onClick}
+        /*onMouseMove={this.onMouseMove}*/
       />
     );
   }
 
-  getType() {
-    return ["primary", "success", "info"][this.props.i];
-  }
-
   render() {
     return (
-      <Col md="4">
-        <Card className="card-coin card-plain">
-          <CardHeader>
-            <div className="canvas-gallery img-center img-fluid">
-              <div ref={el => (this.container = el)}>
-                {this.state.width && this.renderCanvas()}
-              </div>
-            </div>
-          </CardHeader>
-          <CardBody>
-            <Row>
-              <Col className="text-center" md="12">
-                <h4 className="text-uppercase">{this.props.item.name}</h4>
-                <span>{this.props.item.owner}</span>
-                <hr className={"line-" + this.getType()} />
-              </Col>
-            </Row>
-            <Row>
-              <ListGroup>
-                <ListGroupItem>{this.props.item.fills} fills</ListGroupItem>
-              </ListGroup>
-            </Row>
-          </CardBody>
-          <CardFooter className="text-center">
-            <Button onClick={this.onFill} className="btn-simple" color={this.getType()}>
-              Start filling
-            </Button>
-          </CardFooter>
-        </Card>
-      </Col>
+      <div className="canvas-container" ref={el => (this.container = el)}>
+        {this.state.width && this.renderCanvas()}
+      </div>
     );
   }
 }
 
-GalleryItem.propTypes = {
+FillCanvas.propTypes = {
   item: PropTypes.object,
-  i: PropTypes.number,
-  history: PropTypes.object
+  color: PropTypes.string
 };
-
-export default withRouter(GalleryItem);
