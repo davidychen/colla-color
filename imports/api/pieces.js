@@ -252,19 +252,15 @@ Meteor.methods({
       throw new Meteor.Error("not-authorized");
     }
     color = color.toUpperCase();
-    console.log("up");
     const res = Pieces.findOne({_id: id});
     if (res) {
       const area = res.board[r][c];
       const oldColor = res.colors[area];
-      const oldEditor = res.editor;
-      const oldModify = res.modifiedAt;
       if (!(color === oldColor)) {
         const colorString = "colors." + area;
         const cellString = "cells." + area;
         const editorString = "editor";
         const modifyString = "modifiedAt";
-        console.log("up");
         Pieces.update(
           {_id: id},
           {

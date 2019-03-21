@@ -1,14 +1,7 @@
 import React from "react";
 // react plugin used to create charts
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  withHistory
-} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { ChromePicker } from "react-color";
 import FillCanvas from "../../components/Canvas/FillCanvas.jsx";
@@ -26,7 +19,8 @@ class FillPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: "#FFFFFF"
+      color: "#FFFFFF",
+      redirect: false
     };
     this.toUp = [[0, 0, 5]];
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -38,16 +32,20 @@ class FillPage extends React.Component {
 
   componentDidMount() {
     document.body.classList.toggle("landing-page");
+    setTimeout(() => {
+      if (!this.props.item) {
+        this.setState({ redirect: true });
+      }
+    }, 2000);
   }
   componentWillUnmount() {
     document.body.classList.toggle("landing-page");
   }
   render() {
-    setTimeout(() => {
-      if (!this.item) {
-        return <Redirect to="/gallery" />;
-      }
-    }, 2000);
+    const ready = this.props.ready && this.props.item;
+    if (this.state.redirect) {
+      return <Redirect to="/gallery" />;
+    }
     return (
       <div>
         <div className="wrapper">
@@ -55,23 +53,28 @@ class FillPage extends React.Component {
             <section className="section">
               <Row className="row-grid justify-content-between align-items-center text-left">
                 <Col lg="6" md="6">
-                  {!this.props.ready && (
+                  {!ready && (
                     <h1 className="text-white">
                       Loading piece... <br />
                       <span className="text-white">Please wait. </span>
                     </h1>
                   )}
-                  {this.props.ready && (
+                  {ready && (
                     <div>
                       <h1 className="text-white">
                         You are filling: <br />
-                        <span className="text-white">{this.props.item.name}</span>
+                        <span className="text-white">
+                          {this.props.item.name}
+                        </span>
                       </h1>
-                      <FillCanvas item={this.props.item} color={this.state.color} />
+                      <FillCanvas
+                        item={this.props.item}
+                        color={this.state.color}
+                      />
                     </div>
                   )}
                 </Col>
-                {this.props.ready && (
+                {ready && (
                   <Col lg="4" md="5">
                     <h1 className="text-white" />
                     <p className="text-white mb-3 center text-center">

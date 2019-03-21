@@ -2,11 +2,9 @@
 
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
-import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
-import { Pieces } from "../../../api/pieces.js";
 
-export default  class FillCanvas extends Component {
+export default class FillCanvas extends Component {
   constructor(props) {
     super(props);
     this.onMouseDown = this.onMouseDown.bind(this);
@@ -25,6 +23,7 @@ export default  class FillCanvas extends Component {
     this.loaded = false;
     this.size = 0;
     this.board = [];
+    this.pieceId = "";
   }
 
   /**
@@ -42,7 +41,7 @@ export default  class FillCanvas extends Component {
     const { offsetX, offsetY } = nativeEvent;
     const r = Math.floor(offsetY / this.cellSize);
     const c = Math.floor(offsetX / this.cellSize);
-    Meteor.call("piece.fill",  this.props.item._id,  r, c, this.props.color);
+    Meteor.call("piece.fill", this.props.item._id, r, c, this.props.color);
   }
 
   onMouseDown({ nativeEvent }) {
@@ -114,10 +113,13 @@ export default  class FillCanvas extends Component {
     const colors = this.props.item.colors;
     const size = this.props.item.size;
     const cellSize = (this.state.width - 1) / size;
+    if (this.props.item._id != this.pieceId) {
+      this.loaded = false;
+      this.pieceId = this.props.item._id;
+    }
     this.size = size;
     this.cellSize = cellSize;
 
-console.log(this.props.item.cells, size, cellSize);
     if (!this.loaded) {
       this.board = [];
       this.colors = colors;
@@ -137,10 +139,13 @@ console.log(this.props.item.cells, size, cellSize);
         }
         this.board.push(subboard);
       }
+      console.log("loaded", this.loaded);
       this.loaded = true;
     } else {
       const oldColors = this.colors;
       this.colors = colors;
+      console.log(oldColors);
+      console.log(colors);
       const cells = this.props.item.cells;
       for (let i = 0; i < size; i++) {
         if (oldColors[i] != colors[i]) {
@@ -156,7 +161,6 @@ console.log(this.props.item.cells, size, cellSize);
         }
       }
     }
-    
   }
   paint(prevPos, currPos, strokeStyle) {
     const { offsetX, offsetY } = currPos;

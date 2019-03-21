@@ -154,7 +154,7 @@ class MainNavbar extends React.Component {
                   </NavLink>
                 </NavItem>
               )}
-              
+
               {this.props.loggedIn && (
                 <UncontrolledDropdown nav>
                   <DropdownToggle

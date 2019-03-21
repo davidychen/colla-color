@@ -1,13 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  withHistory
-} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 // reactstrap components
@@ -20,8 +13,6 @@ import {
   CardFooter,
   CardImg,
   CardTitle,
-  Label,
-  FormGroup,
   Form,
   Input,
   InputGroupAddon,
@@ -29,12 +20,8 @@ import {
   InputGroup,
   Container,
   Row,
-  Col,
-  UncontrolledAlert
+  Col
 } from "reactstrap";
-
-// core components
-import Footer from "../../components/Footer/Footer.jsx";
 
 class LoginPage extends React.Component {
   constructor(props) {

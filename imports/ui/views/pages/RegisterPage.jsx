@@ -1,13 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  withHistory
-} from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
@@ -21,8 +14,6 @@ import {
   CardFooter,
   CardImg,
   CardTitle,
-  Label,
-  FormGroup,
   Form,
   Input,
   InputGroupAddon,
@@ -30,12 +21,8 @@ import {
   InputGroup,
   Container,
   Row,
-  Col,
-  UncontrolledAlert
+  Col
 } from "reactstrap";
-
-// core components
-import Footer from "../../components/Footer/Footer.jsx";
 
 class RegisterPage extends React.Component {
   constructor(props) {
@@ -173,10 +160,10 @@ class RegisterPage extends React.Component {
                               placeholder="User Name"
                               type="text"
                               id="signup-name"
-                              onFocus={e =>
+                              onFocus={() =>
                                 this.setState({ fullNameFocus: true })
                               }
-                              onBlur={e =>
+                              onBlur={() =>
                                 this.setState({ fullNameFocus: false })
                               }
                             />
@@ -195,10 +182,10 @@ class RegisterPage extends React.Component {
                               placeholder="Password"
                               id="signup-password"
                               type="password"
-                              onFocus={e =>
+                              onFocus={() =>
                                 this.setState({ passwordFocus: true })
                               }
-                              onBlur={e =>
+                              onBlur={() =>
                                 this.setState({ passwordFocus: false })
                               }
                             />

@@ -15,12 +15,11 @@ class Gallery extends Component {
   }
 
   redraw() {
-
     const ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, 500, 500);
     for (const p of this.props.area[this.state.index].area) {
       ctx.fillStyle = p.color;
-      for (const cood of p.coordinate){
+      for (const cood of p.coordinate) {
         ctx.fillRect(cood.x * 10, cood.y * 10, 10, 10);
       }
     }
@@ -29,10 +28,10 @@ class Gallery extends Component {
   drawBoard() {
     var pictureLength = Area.find({}).fetch().length;
     console.log(pictureLength);
-    var select = document.getElementById("selectNumber"); 
+    var select = document.getElementById("selectNumber");
 
-    for(var i = 0; i < pictureLength; i++) {
-      var opt = i+1;
+    for (var i = 0; i < pictureLength; i++) {
+      var opt = i + 1;
       var el = document.createElement("option");
       el.textContent = opt;
       el.value = opt;
@@ -48,13 +47,12 @@ class Gallery extends Component {
     this.redraw();
   }
 
-  onClick(evt) {
+  onClick() {
     // Get the coords
     // const x = evt.clientX - this.canvas.offsetLeft,
     //   y =  evt.clientY - this.canvas.offsetTop;
     // const boardX = Math.floor((evt.clientX - this.canvas2.offsetLeft)/20),
     //   boardY =  Math.floor((evt.clientY - this.canvas2.offsetTop)/20);
-
     // const insertX = Math.floor(x/10);
     // const insertY = Math.floor(y/10);
     // var flag = false; //area.click
@@ -71,7 +69,6 @@ class Gallery extends Component {
     //     break;
     //   }
     // }
-
     // //board.update
     // for (const p of this.props.color.allColor) {
     //   if (boardX == p.x && boardY == p.y){
@@ -96,24 +93,18 @@ class Gallery extends Component {
           height="500"
           style={{ backgroundColor: "#eee" }}
           ref={canvas => (this.canvas = canvas)}
-          onClick = {this.onClick.bind(this)}
+          onClick={this.onClick.bind(this)}
         />
 
-
-        <select id="selectNumber"
-          onChange={this.onSelectChange.bind(this)}>
-        </select>
-        
+        <select id="selectNumber" onChange={this.onSelectChange.bind(this)} />
       </div>
-      
     );
   }
 }
 
 Gallery.propTypes = {
-  area : PropTypes.arrayOf(PropTypes.object).isRequired
+  area: PropTypes.arrayOf(PropTypes.object).isRequired
 };
-
 
 export default withTracker(() => {
   const handle = Meteor.subscribe("area");
@@ -129,7 +120,7 @@ export default withTracker(() => {
 
   return {
     area: Area.find({}).fetch(),
-    ready : handle.ready(),
-    ready2 : handle2.ready()
+    ready: handle.ready(),
+    ready2: handle2.ready()
   };
 })(Gallery);

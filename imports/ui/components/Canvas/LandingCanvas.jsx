@@ -159,8 +159,6 @@ class LandingCanvas extends Component {
     //     break;
     //   }
     // }
-
-    
   }
   paint(prevPos, currPos, strokeStyle) {
     const { offsetX, offsetY } = currPos;

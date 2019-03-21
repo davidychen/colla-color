@@ -1,20 +1,17 @@
 import React, { Component } from "react";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
-import PropTypes from "prop-types";
-
-import { Area } from "../api/area.js";
 
 class Create extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      area : []
+      area: []
     };
-    for (var i = 0; i<50;i++){
+    for (var i = 0; i < 50; i++) {
       var tmp = [];
-      for (var j = 0; j < 50; j++){
+      for (var j = 0; j < 50; j++) {
         tmp.push(0);
       }
       this.state.area.push(tmp);
@@ -28,13 +25,12 @@ class Create extends Component {
       ctx.fillStyle = "#000000";
 
       for (var j = 0; j < this.state.area[i].length; j++) {
-        if (this.state.area[i][j] == 1){
+        if (this.state.area[i][j] == 1) {
           ctx.fillRect(i * 10, j * 10, 10, 10);
         }
       }
     }
   }
-
 
   componentDidMount() {
     this.redraw();
@@ -47,9 +43,9 @@ class Create extends Component {
   onClick(evt) {
     // Get the coords
     const x = evt.clientX - this.canvas.offsetLeft,
-      y =  evt.clientY - this.canvas.offsetTop;
-    const insertX = Math.floor(x/10);
-    const insertY = Math.floor(y/10);
+      y = evt.clientY - this.canvas.offsetTop;
+    const insertX = Math.floor(x / 10);
+    const insertY = Math.floor(y / 10);
     let a = this.state.area.slice(); //creates the clone of the state
     a[insertX][insertY] = 1;
 
@@ -65,14 +61,14 @@ class Create extends Component {
       return;
     }
     a[x][y] = 1;
-    now.push({x, y});
-    this.floodfill(x-1, y, a, now);
-    this.floodfill(x+1, y, a, now);
-    this.floodfill(x, y-1, a, now);
-    this.floodfill(x, y+1, a, now);
+    now.push({ x, y });
+    this.floodfill(x - 1, y, a, now);
+    this.floodfill(x + 1, y, a, now);
+    this.floodfill(x, y - 1, a, now);
+    this.floodfill(x, y + 1, a, now);
   }
 
-  onSubmitClick(evt) {
+  onSubmitClick() {
     // this.setState({
     //   index: evt.target.value - 1
     // });
@@ -99,19 +95,19 @@ class Create extends Component {
     var cood = [];
     var now = [];
     let a = this.state.area.slice(); //creates the clone of the state
-    for (var i = 0;i<a.length;i++){
-      for (var j = 0;j<a[i].length;j++){
+    for (var i = 0; i < a.length; i++) {
+      for (var j = 0; j < a[i].length; j++) {
         if (a[i][j] == 1) {
-          now.push({x:i, y:j});
+          now.push({ x: i, y: j });
         }
       }
     }
     cood.push(now);
 
-    for (var i = 0;i<a.length;i++){
-      for (var j = 0;j<a[i].length;j++){
+    for (i = 0; i < a.length; i++) {
+      for (j = 0; j < a[i].length; j++) {
         if (a[i][j] == 0) {
-          var now = [];
+          now = [];
           this.floodfill(i, j, a, now);
           cood.push(now);
         }
@@ -121,22 +117,21 @@ class Create extends Component {
     i = 0;
     for (const n of cood) {
       if (i == 0) {
-
         newPict.area.push({
-          color:"#000000",
+          color: "#000000",
           coordinate: n
         });
       } else {
         newPict.area.push({
-          color:"#EEEEEE",
+          color: "#EEEEEE",
           coordinate: n
         });
       }
       i++;
     }
 
-    for (var i = 0;i<a.length;i++){
-      for (var j = 0;j<a[i].length;j++){
+    for (i = 0; i < a.length; i++) {
+      for (j = 0; j < a[i].length; j++) {
         a[i][j] = 0;
       }
     }
@@ -157,23 +152,22 @@ class Create extends Component {
           height="500"
           style={{ backgroundColor: "#eee" }}
           ref={canvas => (this.canvas = canvas)}
-          onClick = {this.onClick.bind(this)}
+          onClick={this.onClick.bind(this)}
         />
 
-        <button type="button" className="btn btn-success"
-          onClick={this.onSubmitClick.bind(this)}>
+        <button
+          type="button"
+          className="btn btn-success"
+          onClick={this.onSubmitClick.bind(this)}
+        >
           Submit
         </button>
-        
       </div>
-      
     );
   }
 }
 
-Create.propTypes = {
-};
-
+Create.propTypes = {};
 
 export default withTracker(() => {
   return {};

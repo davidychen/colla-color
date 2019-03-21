@@ -1,18 +1,6 @@
 import React from "react";
 // reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  ListGroupItem,
-  ListGroup,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
+import { Container, Row, Col } from "reactstrap";
 
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
@@ -45,7 +33,7 @@ class GalleryPage extends React.Component {
     // map the rows as div.row
     const content = itemRows.map((row, idx) => (
       <Row key={idx}>
-        {row.map((item,i) => (
+        {row.map((item, i) => (
           <GalleryItem key={item._id} item={item} i={i} />
         ))}
       </Row>

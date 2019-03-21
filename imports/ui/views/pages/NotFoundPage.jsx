@@ -1,22 +1,6 @@
 import React from "react";
 // reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  ListGroupItem,
-  ListGroup,
-  Container,
-  Row,
-  Col
-} from "reactstrap";
-
-
-// core components
-import Footer from "/imports/ui/components/Footer/Footer.jsx";
+import { Container, Row, Col } from "reactstrap";
 
 export default class NotFoundPage extends React.Component {
   constructor(props) {
@@ -29,8 +13,6 @@ export default class NotFoundPage extends React.Component {
     document.body.classList.toggle("gallery-page");
   }
 
-
-
   render() {
     return (
       <div>
@@ -41,8 +23,7 @@ export default class NotFoundPage extends React.Component {
                 <Col md="4">
                   <hr className="line-info" />
                   <h1>
-                    404{" "}
-                    <span className="text-info">Page Not Found</span>
+                    404 <span className="text-info">Page Not Found</span>
                   </h1>
                 </Col>
               </Row>
@@ -54,5 +35,4 @@ export default class NotFoundPage extends React.Component {
   }
 }
 
-NotFoundPage.propTypes = {
-};
+NotFoundPage.propTypes = {};

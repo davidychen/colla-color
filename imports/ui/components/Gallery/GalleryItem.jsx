@@ -7,26 +7,15 @@ import {
   CardHeader,
   CardBody,
   CardFooter,
-  CardTitle,
   ListGroupItem,
   ListGroup,
-  Container,
   Row,
   Col
 } from "reactstrap";
 
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-  withRouter,
-  withHistory
-} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import React, { Component } from "react";
-import { Meteor } from "meteor/meteor";
-import { withTracker } from "meteor/react-meteor-data";
 import PropTypes from "prop-types";
 
 class GalleryItem extends Component {
@@ -191,7 +180,11 @@ class GalleryItem extends Component {
             </Row>
           </CardBody>
           <CardFooter className="text-center">
-            <Button onClick={this.onFill} className="btn-simple" color={this.getType()}>
+            <Button
+              onClick={this.onFill}
+              className="btn-simple"
+              color={this.getType()}
+            >
               Start filling
             </Button>
           </CardFooter>

@@ -5,5 +5,4 @@ import "../imports/api/colorBoard.js";
 import "../imports/api/landingPiece.js";
 import "../imports/api/pieces.js";
 
-Meteor.startup(() => {
-});
+Meteor.startup(() => {});

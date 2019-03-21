@@ -3,19 +3,13 @@ import React from "react";
 import { ChromePicker } from "react-color";
 import LandingCanvas from "../../components/Canvas/LandingCanvas.jsx";
 // reactstrap components
-import {
-  Row,
-  Col
-} from "reactstrap";
-
-// core components
-import Footer from "/imports/ui/components/Footer/Footer.jsx";
+import { Row, Col } from "reactstrap";
 
 class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      color: "#FFFFFF",
+      color: "#FFFFFF"
     };
     this.toUp = [[0, 0, 5]];
     this.handleColorChange = this.handleColorChange.bind(this);
@@ -43,7 +37,7 @@ class LandingPage extends React.Component {
                     Let&apos;s Color <br />
                     <span className="text-white">together!</span>
                   </h1>
-                  <LandingCanvas color={this.state.color}/>
+                  <LandingCanvas color={this.state.color} />
                 </Col>
                 <Col lg="4" md="5">
                   <h1 className="text-white" />

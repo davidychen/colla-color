@@ -3,21 +3,15 @@ import PropTypes from "prop-types";
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
 
-
 import "./assets/css/colla-color.css";
 import "./assets/demo/demo.css";
-//import Points from "../api/points.js";
-// import Area from "../api/area.js";
-// import ColorBoard from "../api/colorBoard.js";
 
 import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
-  withRouter
+  Redirect
 } from "react-router-dom";
-
 
 import MainNavBar from "./components/Navbars/MainNavbar.jsx";
 import Footer from "./components/Footer/Footer.jsx";
@@ -30,15 +24,12 @@ import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
 import NotFoundPage from "./views/pages/NotFoundPage.jsx";
 
-
 const CreateComponent = () => (
   <div>
     <h2>Create</h2>
     {Meteor.user() ? <Create /> : <div>Please login!</div>}
   </div>
 );
-
-
 
 function PrivateRoute({ component: Component, ...rest }) {
   return (
@@ -81,14 +72,8 @@ class App extends Component {
               path="/"
               render={props => <LandingPage {...props} />}
             />
-            <PrivateRoute
-              path="/gallery"
-              component= {GalleryPage }
-            />
-            <PrivateRoute
-              path="/fill/:pieceId"
-              component= {FillPage }
-            />
+            <PrivateRoute path="/gallery" component={GalleryPage} />
+            <PrivateRoute path="/fill/:pieceId" component={FillPage} />
             <Route path="/create" component={CreateComponent} />
 
             <Route path="/login" render={props => <LoginPage {...props} />} />
