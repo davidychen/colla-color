@@ -200,6 +200,11 @@ img {
   vertical-align: middle;
   border-style: none; }
 
+.canvas-gallery {
+  width: 150px;
+  vertical-align: middle;
+  border-style: none; }
+
 svg {
   overflow: hidden;
   vertical-align: middle; }

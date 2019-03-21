@@ -1,29 +1,15 @@
 import React from "react";
 // react plugin used to create charts
-import { Line } from "react-chartjs-2";
 import { ChromePicker } from "react-color";
-import reactCSS from "reactcss";
-
 import LandingCanvas from "../../components/Canvas/LandingCanvas.jsx";
 // reactstrap components
 import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardTitle,
-  ListGroupItem,
-  ListGroup,
-  Container,
   Row,
   Col
 } from "reactstrap";
 
 // core components
 import Footer from "/imports/ui/components/Footer/Footer.jsx";
-
-import bigChartData from "/imports/ui/variables/charts.jsx";
 
 class LandingPage extends React.Component {
   constructor(props) {

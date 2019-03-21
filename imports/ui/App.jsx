@@ -18,27 +18,10 @@ import Gallery from "./Gallery.jsx";
 import MainNavBar from "./components/Navbars/MainNavbar.jsx";
 import Create from "./Create.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
+import GalleryPage from "./views/pages/GalleryPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
 import AccountsUIWrapper from "./AccountsUIWrapper.jsx";
-
-const HomeComponent = () => {
-  return (
-    <div>
-      <div>Colla-Color</div>
-
-      {Meteor.user() ? <CanvasPaint /> : <div>Please login!</div>}
-    </div>
-  );
-};
-
-const AboutComponent = () => (
-  <div>
-    <NavBar/>
-    <h2>About</h2>
-    <div>This is a cooperative filling color game.</div>
-  </div>
-);
 
 const GalleryComponent = () => (
   <div>
@@ -66,22 +49,26 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props.user);
     return (
       <Router>
         <div>
           <MainNavBar />
           <Switch>
-            <Route exact path="/" component={HomeComponent} />
-            <Route exact path="/gallery" component={GalleryComponent} />
-            <Route exact path="/about" component={AboutComponent} />
-            <Route exact path="/create" component={CreateComponent} />
             <Route
-              path="/landing-page"
+              exact
+              path="/"
               render={props => <LandingPage {...props} />}
             />
+            <Route
+              exact
+              path="/gallery"
+              render={props => <GalleryPage {...props} />}
+            />
+            <Route exact path="/create" component={CreateComponent} />
+
             <Route path="/login" render={props => <LoginPage {...props} />} />
             <Route
+              exact
               path="/signup"
               render={props => <RegisterPage {...props} />}
             />
