@@ -131,7 +131,7 @@ class LoginPage extends React.Component {
                       <CardHeader>
                         <CardImg
                           alt="..."
-                          src="assets/img/square-purple-1.png"
+                          src="img/square-purple-1.png"
                         />
                         <CardTitle tag="h4">Login</CardTitle>
                       </CardHeader>
