@@ -4,7 +4,7 @@ A cooperative color filling game, which uses meteor, react.js and mongodb. You c
 
 # Deployment
 
-Deployment is using heroku. The link is here: .
+Deployment is using heroku. The link is here: https://colla-color-app.herokuapp.com.
 
 # Requires
 
@@ -37,13 +37,14 @@ You can either use a local meteor database or a cloud database. If you need to u
 [Yifei Chen](http://davidychen.com/HomepageDavidChen/)
 
 # Screenshots
+![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/1.PNG)
 
-## Demonstration Video
+# Demonstration Video
 
 
-## Class Link
+# Class Link
 [CS-5610 Web Development Spring 2019](http://johnguerra.co/classes/webDevelopment_spring_2019/)
 
-## License
+# License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
