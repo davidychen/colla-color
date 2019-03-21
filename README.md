@@ -37,7 +37,10 @@ You can either use a local meteor database or a cloud database. If you need to u
 [Yifei Chen](http://davidychen.com/HomepageDavidChen/)
 
 # Screenshots
-![ScreenShot](https://github.com/simonwux/guess/blob/master/screenshots/1.PNG)
+![ScreenShot](https://github.com/davidychen/colla-color/blob/master/screenshots/1.PNG)
+![ScreenShot](https://github.com/davidychen/colla-color/blob/master/screenshots/2.PNG)
+![ScreenShot](https://github.com/davidychen/colla-color/blob/master/screenshots/3.PNG)
+![ScreenShot](https://github.com/davidychen/colla-color/blob/master/screenshots/4.PNG)
 
 # Demonstration Video
 
