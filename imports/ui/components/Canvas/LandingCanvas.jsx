@@ -1,6 +1,10 @@
 // canvas.js
 
 import React, { Component } from "react";
+import { Meteor } from "meteor/meteor";
+import { withTracker } from "meteor/react-meteor-data";
+import PropTypes from "prop-types";
+import { LandingPiece } from "../../../api/landingPiece.js";
 
 class LandingCanvas extends Component {
   constructor(props) {
@@ -8,44 +12,37 @@ class LandingCanvas extends Component {
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.endPaintEvent = this.endPaintEvent.bind(this);
+    this.onClick = this.onClick.bind(this);
     this.state = {
       width: 0,
-      height: 0,
+      size: 0,
+      loaded: false,
       isPainting: false,
-      userStrokeStyle: "#EE92C2",
-      guestStrokeStyle: "#F0C987",
+      color: "",
       line: [],
       prevPos: { offsetX: 0, offsetY: 0 }
     };
+    this.loaded = false;
+    this.size = 0;
+    this.board = [];
   }
 
   /**
    * Calculate & Update state of new dimensions
    */
   updateDimensions() {
-    console.log(window.innerWidth);
-    console.log(this.container.offsetWidth);
     this.setState({
-      width: this.container.offsetWidth,
-      height: this.container.offsetWidth
+      width: this.container.offsetWidth
     });
-    // if (window.innerWidth < 500) {
-    //   this.setState({
-    //     width: window.innerWidth - 25,
-    //     height: window.innerWidth - 25
-    //   });
-    // } else {
-    //   let update_width = window.innerWidth / 2;
-    //   let update_height = update_width;
-    //   this.setState({ width: update_width, height: update_height });
-    // }
+    this.loaded = false;
+    this.drawBoard();
   }
 
-  /**
-   * Remove event listener
-   */
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  onClick({ nativeEvent }) {
+    const { offsetX, offsetY } = nativeEvent;
+    const r = Math.floor(offsetY / this.cellSize);
+    const c = Math.floor(offsetX / this.cellSize);
+    Meteor.call("landing-piece.fill", r, c, this.props.color);
   }
 
   onMouseDown({ nativeEvent }) {
@@ -74,6 +71,97 @@ class LandingCanvas extends Component {
       // this.sendPaintData();
     }
   }
+  fillOne(r, c, color, area, visited) {
+    if (r < 0 || r >= this.size || c < 0 || c >= this.size) return;
+    if (visited[r][c]) return;
+    const board = this.props.board.board;
+    const boardArea = board[r][c];
+    const cellSize = this.cellSize;
+    visited[r][c] = true;
+    if (boardArea == area) {
+      if (this.board[r][c] !== this.colors[area]) {
+        this.ctx.clearRect(cellSize * c, cellSize * r, cellSize, cellSize);
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(
+          cellSize * c + 1,
+          cellSize * r + 1,
+          cellSize - 1,
+          cellSize - 1
+        );
+        this.board[r][c] = color;
+      }
+      setTimeout(() => {
+        this.fillOne(r - 1, c, color, area, visited);
+        this.fillOne(r, c + 1, color, area, visited);
+        this.fillOne(r + 1, c, color, area, visited);
+        this.fillOne(r, c - 1, color, area, visited);
+      }, 100);
+    } else {
+      setTimeout(() => {
+        this.fillOne(r - 1, c, color, area, visited);
+        this.fillOne(r, c + 1, color, area, visited);
+        this.fillOne(r + 1, c, color, area, visited);
+        this.fillOne(r, c - 1, color, area, visited);
+      }, 200);
+    }
+  }
+  drawBoard() {
+    if (!this.canvas || !this.props.colors) return;
+    this.ctx = this.canvas.getContext("2d");
+    const board = this.props.board.board;
+    const colors = this.props.colors.colors;
+    const size = this.props.board.size;
+    const cellSize = (this.state.width - 1) / size;
+    this.size = size;
+    this.cellSize = cellSize;
+
+    if (!this.loaded) {
+      this.board = [];
+      this.colors = colors;
+      this.ctx.clearRect(0, 0, this.state.width, this.state.width);
+      for (let r = 0; r < size; r++) {
+        let subboard = [];
+        for (let c = 0; c < size; c++) {
+          const area = board[r][c];
+          this.ctx.fillStyle = colors[area];
+          this.ctx.fillRect(
+            cellSize * c + 1,
+            cellSize * r + 1,
+            cellSize - 1,
+            cellSize - 1
+          );
+          subboard.push(colors[area]);
+        }
+        this.board.push(subboard);
+      }
+      this.loaded = true;
+    } else {
+      const oldColors = this.colors;
+      this.colors = colors;
+      const cells = this.props.colors.cells;
+      for (let i = 0; i < size; i++) {
+        if (oldColors[i] != colors[i]) {
+          let visited = [];
+          for (let i = 0; i < size; i++) {
+            let subarray = [];
+            for (let j = 0; j < size; j++) {
+              subarray.push(false);
+            }
+            visited.push(subarray);
+          }
+          this.fillOne(cells[i].r, cells[i].c, colors[i], i, visited);
+        }
+      }
+    }
+    // for (let i = 0; i < this.size; i++) {
+    //   if (this.colors[i] != colors[i]) {
+    //     this.colors = colors;
+    //     break;
+    //   }
+    // }
+
+    
+  }
   paint(prevPos, currPos, strokeStyle) {
     const { offsetX, offsetY } = currPos;
     const { offsetX: x, offsetY: y } = prevPos;
@@ -93,14 +181,18 @@ class LandingCanvas extends Component {
     // Here we set up the properties of the canvas element.
     this.updateDimensions();
     window.addEventListener("resize", this.updateDimensions.bind(this));
-    //this.canvas.width = this.state.width;
-    //this.canvas.height = this.state.height;
-    if (this.canvas) {
-      this.ctx = this.canvas.getContext("2d");
-      this.ctx.lineJoin = "round";
-      this.ctx.lineCap = "round";
-      this.ctx.lineWidth = 5;
-    }
+    this.drawBoard();
+  }
+
+  componentDidUpdate() {
+    this.drawBoard();
+  }
+
+  /**
+   * Remove event listener
+   */
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
   renderCanvas() {
@@ -109,12 +201,13 @@ class LandingCanvas extends Component {
         // We use the ref attribute to get direct access to the canvas element.
         ref={ref => (this.canvas = ref)}
         width={this.state.width}
-        height={this.state.height}
-        style={{ background: "black" }}
+        height={this.state.width}
+        style={{ background: "#787878" }}
         onMouseDown={this.onMouseDown}
         onMouseLeave={this.endPaintEvent}
         onMouseUp={this.endPaintEvent}
-        onMouseMove={this.onMouseMove}
+        onClick={this.onClick}
+        /*onMouseMove={this.onMouseMove}*/
       />
     );
   }
@@ -127,4 +220,22 @@ class LandingCanvas extends Component {
     );
   }
 }
-export default LandingCanvas;
+
+LandingCanvas.propTypes = {
+  board: PropTypes.object,
+  colors: PropTypes.object,
+  editors: PropTypes.object,
+  color: PropTypes.string
+};
+export default withTracker(() => {
+  Meteor.subscribe("landing-piece").ready();
+
+  return {
+    board: LandingPiece.find({}, { size: 1, board: 1 }).fetch()[0],
+    colors: LandingPiece.find({}, { colors: 1, cells: 1 }).fetch()[0],
+    editors: LandingPiece.find(
+      {},
+      { editors: 1, sort: { modifiedAt: -1 } }
+    ).fetch()[0]
+  };
+})(LandingCanvas);

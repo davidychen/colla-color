@@ -500,6 +500,10 @@ pre {
   margin-right: auto;
   margin-left: auto; }
 
+.canvas-container {
+  cursor: cell;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
