@@ -43,7 +43,7 @@ You can either use a local meteor database or a cloud database. If you need to u
 ![ScreenShot](https://github.com/davidychen/colla-color/blob/master/screenshots/4.PNG)
 
 # Demonstration Video
-
+[Youtube Colla-Color](https://www.youtube.com/watch?v=moqZc8DkBNU&t=1s)
 
 # Class Link
 [CS-5610 Web Development Spring 2019](http://johnguerra.co/classes/webDevelopment_spring_2019/)
