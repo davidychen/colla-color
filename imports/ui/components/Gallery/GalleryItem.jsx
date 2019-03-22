@@ -1,5 +1,5 @@
 // canvas.js
-
+import { Meteor } from "meteor/meteor";
 // reactstrap components
 import {
   Button,
@@ -22,21 +22,24 @@ class GalleryItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: 0
+      width: 150
     };
     this.loaded = false;
     this.size = 0;
     this.board = [];
     this.onFill = this.onFill.bind(this);
+    this.onEdit = this.onEdit.bind(this);
   }
 
   /**
    * Calculate & Update state of new dimensions
    */
   updateDimensions() {
-    this.setState({
-      width: this.container.offsetWidth
-    });
+    if (this.container) {
+      this.setState({
+        width: this.container.offsetWidth
+      });
+    }
     this.loaded = false;
     this.drawBoard();
   }
@@ -120,6 +123,10 @@ class GalleryItem extends Component {
     this.props.history.push("/fill/" + this.props.item._id);
   }
 
+  onEdit() {
+    this.props.history.push("/edit/" + this.props.item._id);
+  }
+
   componentDidMount() {
     // Here we set up the properties of the canvas element.
     this.updateDimensions();
@@ -151,10 +158,11 @@ class GalleryItem extends Component {
   }
 
   getType() {
-    return ["primary", "success", "info"][this.props.i];
+    return ["primary", "success", "info"][this.props.i % 3];
   }
 
   render() {
+    console.log(this.props.item, this.props.item.ownerId, Meteor.userId());
     return (
       <Col md="4">
         <Card className="card-coin card-plain">
@@ -180,12 +188,21 @@ class GalleryItem extends Component {
             </Row>
           </CardBody>
           <CardFooter className="text-center">
+            {this.props.item.ownerId == Meteor.userId() && (
+              <Button
+                onClick={this.onEdit}
+                className="btn-simple"
+                color={this.getType()}
+              >
+                Edit
+              </Button>
+            )}
             <Button
               onClick={this.onFill}
               className="btn-simple"
               color={this.getType()}
             >
-              Start filling
+              Fill
             </Button>
           </CardFooter>
         </Card>
@@ -195,6 +212,7 @@ class GalleryItem extends Component {
 }
 
 GalleryItem.propTypes = {
+  ready: PropTypes.bool,
   item: PropTypes.object,
   i: PropTypes.number,
   history: PropTypes.object

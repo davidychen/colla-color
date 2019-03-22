@@ -14547,7 +14547,8 @@ input.datetimepicker[data-color="yellow"] + .bootstrap-datetimepicker-widget {
       margin-bottom: 0;
       padding: 7px 0; }
   .card.card-coin {
-    border: 2px solid #344675; }
+    border: 2px solid #344675; 
+    margin-bottom: 90px; }
     .card.card-coin .card-header {
       margin: -100px auto 20px; }
     .card.card-coin img {

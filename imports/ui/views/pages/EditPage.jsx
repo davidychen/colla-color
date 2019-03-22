@@ -4,9 +4,9 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 
 import { ChromePicker } from "react-color";
-import FillCanvas from "../../components/Canvas/FillCanvas.jsx";
+import EditCanvas from "../../components/Canvas/EditCanvas.jsx";
 // reactstrap components
-import { Row, Col } from "reactstrap";
+import { Row, Col, Button } from "reactstrap";
 
 import { Meteor } from "meteor/meteor";
 import { withTracker } from "meteor/react-meteor-data";
@@ -15,15 +15,19 @@ import { Pieces } from "../../../api/pieces.js";
 
 // core components
 
-class FillPage extends React.Component {
+class EditPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       color: "#FFFFFF",
-      redirect: false
+      redirect: false,
+      wait: false
     };
     this.toUp = [[0, 0, 5]];
     this.handleColorChange = this.handleColorChange.bind(this);
+    this.submitPiece = this.submitPiece.bind(this);
+    this.updateBoard = this.updateBoard.bind(this);
+    this.board = [];
     // this.updateNumer = this.updateNumer.bind(this);
   }
   handleColorChange(color) {
@@ -37,10 +41,31 @@ class FillPage extends React.Component {
         this.setState({ redirect: true });
       }
     }, 5000);
+    setTimeout(() => {
+      if (this.state.wait) {
+        this.setState({ wait: false });
+      }
+    }, 5000);
+  }
+
+  componentDidUpdate() {
+    setTimeout(() => {
+      if (this.state.wait) {
+        this.setState({ wait: false });
+      }
+    }, 5000);
   }
   componentWillUnmount() {
     document.body.classList.toggle("landing-page");
   }
+  updateBoard(board) {
+    this.board = board;
+  }
+  submitPiece() {
+    Meteor.call("piece.edit", this.props.item._id, this.board);
+    this.setState({ wait: true });
+  }
+
   render() {
     const ready = this.props.ready && this.props.item;
     if (this.state.redirect) {
@@ -62,14 +87,15 @@ class FillPage extends React.Component {
                   {ready && (
                     <div>
                       <h1 className="text-white">
-                        You are filling: <br />
+                        You are Editing: <br />
                         <span className="text-white">
                           {this.props.item.name}
                         </span>
                       </h1>
-                      <FillCanvas
+                      <EditCanvas
                         item={this.props.item}
                         color={this.state.color}
+                        updateBoard={this.updateBoard}
                       />
                     </div>
                   )}
@@ -78,11 +104,9 @@ class FillPage extends React.Component {
                   <Col lg="4" md="5">
                     <h1 className="text-white" />
                     <p className="text-white mb-3 center text-center">
-                      {"Owner: " + this.props.item.owner}
+                      Use the color to edit your piece!
                     </p>
-                    <p className="text-white mb-3 center text-center">
-                      {"Fills: " + this.props.item.fills}
-                    </p>
+
                     <div className="text-white mb-3 center">
                       <ChromePicker
                         className="center"
@@ -90,6 +114,22 @@ class FillPage extends React.Component {
                         color={this.state.color}
                         onChange={this.handleColorChange}
                       />
+                    </div>
+                    <div className="text-white mb-3 center text-center">
+                      <Button
+                        color="success"
+                        onClick={() => this.submitPiece()}
+                      >
+                        Save
+                      </Button>
+                    </div>
+
+                    <div className="text-white mb-3 center text-center">
+                      {this.state.wait && (
+                        <p className="text-white mb-3 center text-center">
+                          Saved successfully!
+                        </p>
+                      )}
                     </div>
                   </Col>
                 )}
@@ -102,17 +142,17 @@ class FillPage extends React.Component {
   }
 }
 
-FillPage.propTypes = {
+EditPage.propTypes = {
   ready: PropTypes.bool,
   item: PropTypes.object,
   currentUser: PropTypes.object
 };
 export default withTracker(props => {
   const pieceId = props.match.params.pieceId;
-  let ready = Meteor.subscribe("piece-withId", pieceId).ready();
+  let ready = Meteor.subscribe("piece-own-withId", pieceId).ready();
   return {
     ready,
     item: Pieces.find({}).fetch()[0],
     currentUser: Meteor.user()
   };
-})(FillPage);
+})(EditPage);

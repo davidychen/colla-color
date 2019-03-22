@@ -30,9 +30,11 @@ export default class FillCanvas extends Component {
    * Calculate & Update state of new dimensions
    */
   updateDimensions() {
-    this.setState({
-      width: this.container.offsetWidth
-    });
+    if (this.container) {
+      this.setState({
+        width: this.container.offsetWidth
+      });
+    }
     this.loaded = false;
     this.drawBoard();
   }
@@ -139,13 +141,10 @@ export default class FillCanvas extends Component {
         }
         this.board.push(subboard);
       }
-      console.log("loaded", this.loaded);
       this.loaded = true;
     } else {
       const oldColors = this.colors;
       this.colors = colors;
-      console.log(oldColors);
-      console.log(colors);
       const cells = this.props.item.cells;
       for (let i = 0; i < size; i++) {
         if (oldColors[i] != colors[i]) {

@@ -16,20 +16,21 @@ import {
 import MainNavBar from "./components/Navbars/MainNavbar.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 
-import Create from "./Create.jsx";
+// import Create from "./Create.jsx";
 import LandingPage from "./views/pages/LandingPage.jsx";
 import GalleryPage from "./views/pages/GalleryPage.jsx";
 import FillPage from "./views/pages/FillPage.jsx";
+import EditPage from "./views/pages/EditPage.jsx";
 import LoginPage from "./views/pages/LoginPage.jsx";
 import RegisterPage from "./views/pages/RegisterPage.jsx";
 import NotFoundPage from "./views/pages/NotFoundPage.jsx";
 
-const CreateComponent = () => (
+/*const CreateComponent = () => (
   <div>
     <h2>Create</h2>
     {Meteor.user() ? <Create /> : <div>Please login!</div>}
   </div>
-);
+);*/
 
 function PrivateRoute({ component: Component, ...rest }) {
   return (
@@ -74,7 +75,8 @@ class App extends Component {
             />
             <PrivateRoute path="/gallery" component={GalleryPage} />
             <PrivateRoute path="/fill/:pieceId" component={FillPage} />
-            <Route path="/create" component={CreateComponent} />
+            <PrivateRoute path="/edit/:pieceId" component={EditPage} />
+            {/*<Route path="/create" component={CreateComponent} />*/}
 
             <Route path="/login" render={props => <LoginPage {...props} />} />
             <Route
