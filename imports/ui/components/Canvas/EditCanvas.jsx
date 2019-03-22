@@ -1,7 +1,6 @@
 // canvas.js
 
 import React, { Component } from "react";
-import { Meteor } from "meteor/meteor";
 import PropTypes from "prop-types";
 
 export default class EditCanvas extends Component {

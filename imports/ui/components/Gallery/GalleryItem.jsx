@@ -162,7 +162,6 @@ class GalleryItem extends Component {
   }
 
   render() {
-    console.log(this.props.item, this.props.item.ownerId, Meteor.userId());
     return (
       <Col md="4">
         <Card className="card-coin card-plain">

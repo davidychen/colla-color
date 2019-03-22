@@ -13,7 +13,6 @@ import GalleryItem from "../../components/Gallery/GalleryItem.jsx";
 
 class GalleryItems extends React.Component {
   renderItems() {
-    console.log(this.props.pageId, this.props.items.length);
     let filteredItems = this.props.items;
 
     // array of N elements, where N is the number of rows needed

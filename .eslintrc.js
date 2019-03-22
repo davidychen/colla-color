@@ -35,11 +35,7 @@ module.exports = {
             "error",
             "always"
         ],
-        "no-console": "off",
-        "array-element-newline": [
-            "error", 
-            { "multiline": true }
-        ]
+        "no-console": "off"
     },
     "settings": {
         "react": {

@@ -31,7 +31,7 @@ class EditPage extends React.Component {
     // this.updateNumer = this.updateNumer.bind(this);
   }
   handleColorChange(color) {
-    this.setState({ color: color.hex });
+    this.setState({ color: color.hex.toUppercase() });
   }
 
   componentDidMount() {
@@ -54,6 +54,15 @@ class EditPage extends React.Component {
         this.setState({ wait: false });
       }
     }, 5000);
+    const currentUserId = this.props.currentUser && this.props.currentUser._id;
+    if (
+      this.props.ready &&
+      this.props.item &&
+      this.props.item._id == this.props.match.params.pieceId &&
+      this.props.item.ownerId != currentUserId
+    ) {
+      this.setState({ redirect: true });
+    }
   }
   componentWillUnmount() {
     document.body.classList.toggle("landing-page");
@@ -71,6 +80,7 @@ class EditPage extends React.Component {
     if (this.state.redirect) {
       return <Redirect to="/gallery" />;
     }
+
     return (
       <div>
         <div className="wrapper">
@@ -145,7 +155,8 @@ class EditPage extends React.Component {
 EditPage.propTypes = {
   ready: PropTypes.bool,
   item: PropTypes.object,
-  currentUser: PropTypes.object
+  currentUser: PropTypes.object,
+  match: PropTypes.object
 };
 export default withTracker(props => {
   const pieceId = props.match.params.pieceId;
