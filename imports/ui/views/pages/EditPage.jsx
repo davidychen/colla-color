@@ -31,7 +31,7 @@ class EditPage extends React.Component {
     // this.updateNumer = this.updateNumer.bind(this);
   }
   handleColorChange(color) {
-    this.setState({ color: color.hex.toUppercase() });
+    this.setState({ color: color.hex });
   }
 
   componentDidMount() {
