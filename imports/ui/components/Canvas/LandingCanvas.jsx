@@ -191,6 +191,10 @@ class LandingCanvas extends Component {
    */
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
+    var highestTimeoutId = setTimeout(";");
+    for (var i = 0; i < highestTimeoutId; i++) {
+      clearTimeout(i);
+    }
   }
 
   renderCanvas() {

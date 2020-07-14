@@ -83,8 +83,8 @@ class GalleryPage extends React.Component {
   renderPages() {
     const pages = [];
     for (let i = 0; i < this.props.counts; i++) {
-      if (i % 3 == 0) {
-        pages.push(i / 3 + 1);
+      if (i % 6 == 0) {
+        pages.push(i / 6 + 1);
       }
     }
     const content = pages.map((pageId, idx) => (

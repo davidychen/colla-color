@@ -2759,7 +2759,7 @@ if (Meteor.isServer) {
   // Only publish tasks that are public or belong to the current user
   Meteor.publish("pieces-fills", function piecePublication(page) {
     check(page, Number);
-    const skip = (page - 1) * 3;
+    const skip = (page - 1) * 6;
     return Pieces.find(
       {},
       {
@@ -2779,7 +2779,7 @@ if (Meteor.isServer) {
         },
         sort: { fills: -1 },
         skip: skip,
-        limit: 3
+        limit: 6
       }
     );
   });

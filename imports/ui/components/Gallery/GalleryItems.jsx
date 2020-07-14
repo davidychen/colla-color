@@ -16,10 +16,10 @@ class GalleryItems extends React.Component {
     let filteredItems = this.props.items;
 
     // array of N elements, where N is the number of rows needed
-    const rows = [...Array(Math.ceil(filteredItems.length / 3))];
+    const rows = [...Array(Math.ceil(filteredItems.length / 3)).keys()];
     // chunk the products into the array of rows
-    const itemRows = rows.map((row, idx) =>
-      filteredItems.slice(idx * 3, idx * 3 + 3)
+    const itemRows = rows.map(row =>
+      filteredItems.slice(row * 3, row * 3 + 3)
     );
     // map the rows as div.row
     const content = itemRows.map((row, idx) => (
