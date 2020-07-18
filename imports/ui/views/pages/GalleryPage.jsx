@@ -244,7 +244,7 @@ export default withRouter(
   withTracker(() => {
     Meteor.subscribe("piece-count").ready();
 
-    Meteor.subscribe("pieces-fills", 1).ready();
+    //Meteor.subscribe("pieces-fills", 1).ready();
     //Meteor.subscribe("piece-find").ready();
     return {
       //items: Pieces.find({}).fetch(),
