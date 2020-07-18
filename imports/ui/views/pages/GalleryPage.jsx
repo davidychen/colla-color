@@ -235,7 +235,7 @@ class GalleryPage extends React.Component {
 }
 
 GalleryPage.propTypes = {
-  items: PropTypes.arrayOf(PropTypes.object),
+  // items: PropTypes.arrayOf(PropTypes.object),
   currentUser: PropTypes.object,
   history: PropTypes.object,
   counts: PropTypes.number
@@ -247,7 +247,7 @@ export default withRouter(
     Meteor.subscribe("pieces-fills", 1).ready();
     //Meteor.subscribe("piece-find").ready();
     return {
-      items: Pieces.find({}).fetch(),
+      //items: Pieces.find({}).fetch(),
       //items: Pieces.findFromPublication("piece-find", 1).fetch(),
       counts: Counts.get("pieces-counter"),
       currentUser: Meteor.user()
