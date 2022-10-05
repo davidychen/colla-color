@@ -51,3 +51,4 @@ You can either use a local meteor database or a cloud database. If you need to u
 # License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+
